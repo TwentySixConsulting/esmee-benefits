@@ -1,0 +1,12 @@
+# The plaintext report and all working data. NEVER COMMIT THESE.
+#
+# This repository is public so that GitHub Pages can serve it. index.html is safe to publish
+# because the client's benefits data is AES-encrypted inside it. Everything under _source/ is
+# the same content in the clear, so committing any of it would defeat the gate entirely.
+# build/verify.py fails the build if identifying plaintext reaches index.html.
+_source/
+
+# Browser-test scratch file, written to the repo root so ./shell/* resolves as deployed.
+_preview.html
+
+.DS_Store

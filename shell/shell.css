@@ -1,0 +1,378 @@
+/* TwentySix · Zigbert — Unified Shell
+ *
+ * Light, editorial, premium. White canvas, white shell, clay accents.
+ * Used as injected chrome on the static Pay & Benefits pages and mirrored
+ * pixel-for-pixel by the React <Shell> on the React Home page.
+ *
+ * Palette single source of truth = client/src/lib/theme.ts (the `C` object).
+ * This build-less static file mirrors those values as literal hex:
+ *   Canvas      #FFFFFF   white
+ *   Surface     #FFFFFF   white
+ *   Subtle bg   #F6F7F9   neutral wash (hover, inset panels)
+ *   Tab track   #EBEEF3   one step darker, so the white active pill reads
+ *   Ink         #121C2B   navy near-black
+ *   Muted ink   #4B5563
+ *   Border      #DEE1E6   neutral hairline
+ *   Clay        #C9785A   the single accent
+ *   Clay deep   #B0603F   hover / pressed
+ *   Clay tint   #E8D8CE   accent bg / hover
+ * Fonts: Inter (body/UI) + Poppins (display wordmark) — matches zigbert.co.uk.
+ */
+
+.ts-shell,
+.ts-shell *,
+.ts-shell *::before,
+.ts-shell *::after {
+  box-sizing: border-box;
+}
+
+.ts-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 400;
+  background: #ffffff;
+  border-bottom: 1px solid #DEE1E6;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+              0 1px 24px -8px rgba(28, 24, 20, 0.06);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #121C2B;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ts-shell__inner {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ── Brand lockup ─────────────────────────────────────── */
+.ts-shell__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  padding: 6px 4px 6px 0;
+  border-radius: 6px;
+  transition: opacity 160ms ease;
+}
+.ts-shell__brand:hover { opacity: 0.7; }
+.ts-shell__brand:focus-visible {
+  outline: 2px solid #C9785A;
+  outline-offset: 2px;
+}
+
+.ts-shell__logo {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+.ts-shell__divider {
+  width: 1px;
+  height: 22px;
+  background: #DEE1E6;
+}
+
+.ts-shell__brand-sub {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #4B5563;
+  white-space: nowrap;
+}
+
+.ts-shell__wordmark {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 3px;
+}
+.ts-shell__wordmark-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #C9785A;
+}
+.ts-shell__wordmark-name {
+  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #121C2B;
+}
+
+/* ── Tabs ─────────────────────────────────────────────── */
+.ts-shell__tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #EBEEF3;
+  border: 1px solid #E7EAEF;
+}
+
+.ts-shell__tab {
+    white-space: nowrap;   /* six tabs now: a wrapped label clips in a 30px pill */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #64748b;
+  background: transparent;
+  transition: color 160ms ease, background 160ms ease;
+  border: 0;
+  cursor: pointer;
+}
+.ts-shell__tab:hover {
+  color: #121C2B;
+  background: rgba(201, 120, 90, 0.07);
+}
+.ts-shell__tab:focus-visible {
+  outline: 2px solid #C9785A;
+  outline-offset: 2px;
+}
+
+.ts-shell__tab--active {
+  color: #121C2B;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(28, 24, 20, 0.05),
+              0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  border: 1px solid #DEE1E6;
+}
+.ts-shell__tab--active::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #C9785A;
+}
+.ts-shell__tab--active {
+  padding-left: 24px;
+}
+
+/* ── User pill / menu ─────────────────────────────────── */
+.ts-shell__user {
+  position: relative;
+  display: inline-block;
+}
+
+.ts-shell__user-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 4px 4px;
+  height: 36px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #DEE1E6;
+  color: #121C2B;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.ts-shell__user-button:hover {
+  background: #F6F7F9;
+  border-color: #E8D8CE;
+}
+.ts-shell__user-button[aria-expanded="true"] {
+  background: #F6F7F9;
+  border-color: #C9785A;
+}
+.ts-shell__user-button:focus-visible {
+  outline: 2px solid #C9785A;
+  outline-offset: 2px;
+}
+
+.ts-shell__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #E8D8CE;
+  color: #C9785A;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid #E0C3B3;
+}
+
+/* nowrap + cap, mirroring Shell.tsx: with six tabs a long client name was
+   wrapping the pill to two lines around 820px. */
+.ts-shell__user-name {
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ts-shell__chev {
+  width: 12px;
+  height: 12px;
+  opacity: 0.55;
+  transition: transform 200ms ease;
+}
+.ts-shell__user-button[aria-expanded="true"] .ts-shell__chev {
+  transform: rotate(180deg);
+  opacity: 0.85;
+}
+
+/* Dropdown */
+.ts-shell__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 280px;
+  background: #ffffff;
+  color: #121C2B;
+  border: 1px solid #DEE1E6;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(28, 24, 20, 0.04),
+              0 24px 60px -16px rgba(28, 24, 20, 0.16);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 401;
+}
+.ts-shell__menu[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ts-shell__menu-accent {
+  height: 2px;
+  background: linear-gradient(90deg, #C9785A, #B0603F);
+}
+
+.ts-shell__menu-body { padding: 16px 18px 18px; }
+
+.ts-shell__menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.ts-shell__menu-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #E8D8CE;
+  color: #C9785A;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #E0C3B3;
+}
+.ts-shell__menu-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #121C2B;
+  line-height: 1.2;
+}
+.ts-shell__menu-status {
+  font-size: 11px;
+  color: rgba(28, 24, 20, 0.5);
+  margin-top: 2px;
+}
+
+.ts-shell__menu-info {
+  background: #F6F7F9;
+  border-radius: 12px;
+  padding: 11px 13px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid #E7EAEF;
+}
+.ts-shell__menu-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #121C2B;
+  line-height: 1.3;
+  word-break: break-all;
+}
+.ts-shell__menu-info-row svg {
+  flex: none;
+  opacity: 0.55;
+}
+
+.ts-shell__signout {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  border-radius: 10px;
+  background: #121C2B;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 0;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+.ts-shell__signout:hover { background: #24304a; }
+.ts-shell__signout:focus-visible {
+  outline: 2px solid #C9785A;
+  outline-offset: 2px;
+}
+
+/* ── Body offset (for static pages — React Home applies its own) ─ */
+body.has-ts-shell { padding-top: 60px; }
+
+/* Six tabs plus the brand block plus the user pill no longer fit on a 1280px
+   laptop, so the "Pay & Benefits Intelligence" strapline drops out first. This
+   mirrors Shell.tsx, where the same element is `hidden xl:inline`; the two
+   headers have to break at the same width or they stop looking like one product. */
+@media (max-width: 1279px) {
+  .ts-shell__brand-sub,
+  .ts-shell__divider { display: none; }
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .ts-shell__inner { padding: 0 14px; gap: 12px; }
+  .ts-shell__wordmark-name { display: none; }
+  .ts-shell__tab { padding: 0 10px; font-size: 12px; }
+  .ts-shell__tab--active { padding-left: 20px; }
+  .ts-shell__tab--active::before { left: 10px; }
+  .ts-shell__user-name { display: none; }
+  .ts-shell__user-button { padding-right: 8px; }
+  .ts-shell__menu { right: 0; min-width: 260px; }
+}
