@@ -232,11 +232,40 @@ STYLE_FIXES = """
   font-size: 13.5px; color: var(--text); line-height: 1.7; margin: 0 0 18px;
   padding-left: 14px; border-left: 3px solid var(--gold);
 }
-.efb-th { margin-bottom: 18px; }
-.efb-th-h { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 6px; }
-.efb-th p { font-size: 13px; color: var(--text); line-height: 1.7; margin: 0 0 9px; }
-.efb-th ul { margin: 0 0 9px; padding-left: 19px; }
-.efb-th li { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 5px; }
+.efb-th-hd { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+.efb-th-all {
+  flex: 0 0 auto; border: 1px solid var(--line); background: #fff; border-radius: 8px;
+  font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-mid);
+  padding: 7px 13px; cursor: pointer;
+}
+.efb-th-all:hover { color: var(--gold-deep); border-color: var(--pink-soft); }
+.efb-th-stack {
+  border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden;
+  background: #fff; position: relative;
+}
+.efb-th { border-top: 1px solid var(--line-soft); }
+.efb-th:first-of-type { border-top: 0; }
+.efb-th > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: flex-start; gap: 11px;
+  padding: 14px 18px;
+}
+.efb-th > summary::-webkit-details-marker { display: none; }
+.efb-th > summary:hover { background: var(--bg-app); }
+.efb-th-chev { flex: 0 0 auto; color: var(--gold); margin-top: 1px; transition: transform .15s ease; }
+.efb-th-chev svg { width: 15px; height: 15px; display: block; }
+.efb-th[open] > summary { background: var(--bg-app); }
+.efb-th[open] .efb-th-chev { transform: rotate(90deg); }
+.efb-th-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.efb-th-h { font-family: var(--font-serif); font-size: 14.5px; font-weight: 600; color: var(--text); }
+.efb-th-sum { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; }
+.efb-th-body { padding: 2px 18px 16px 44px; }
+.efb-th-body p { font-size: 13px; color: var(--text); line-height: 1.7; margin: 0 0 9px; }
+.efb-th-body p:last-child { margin-bottom: 0; }
+.efb-th-body ul { margin: 0 0 9px; padding-left: 19px; }
+.efb-th-body li { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 5px; }
+@media (max-width: 700px) { .efb-th-body { padding-left: 18px; } }
+/* Printing must not hide content behind a closed summary. */
+@media print { .efb-th-body { display: block !important; } .efb-th-hd .efb-th-all { display: none; } }
 
 /* ── Example packages, and the wellbeing strategy ────────────────────────── */
 
@@ -272,6 +301,63 @@ STYLE_FIXES = """
 .efb-cn-tag { background: var(--pink-wash); color: var(--gold-deep); border: 1px solid var(--pink-soft); }
 .efb-cn-have { background: var(--sage-wash); color: var(--sage-deep); border: 1px solid var(--sage-soft); }
 .efb-cn-row--have .efb-cn-b, .efb-cn-row--have .efb-cn-r { color: var(--text-mid); }
+
+.bx-yp-cur {
+  font-size: 12.5px; color: var(--text); line-height: 1.55;
+  margin: 2px 0 8px; padding: 7px 10px;
+  background: var(--bg-app); border-left: 2px solid var(--gold); border-radius: 0 6px 6px 0;
+}
+.bx-yp-cur b { color: var(--text); font-weight: 700; }
+
+/* ── Section export: pop out, PNG, Word ──────────────────────────────────── */
+.efb-xp {
+  position: absolute; top: 10px; right: 10px; z-index: 5;
+  display: flex; gap: 4px;
+  opacity: 0; transition: opacity .14s ease;
+}
+[data-export]:hover > .efb-xp,
+[data-export]:focus-within > .efb-xp { opacity: 1; }
+/* Touch and keyboard users never hover, so never reveal it. */
+@media (hover: none) { .efb-xp { opacity: 1; } }
+.efb-xp-b {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-sans); font-size: 11px; font-weight: 600; color: var(--text-mid);
+  background: rgba(255,255,255,0.94); border: 1px solid var(--line);
+  border-radius: 7px; padding: 5px 9px; cursor: pointer;
+  box-shadow: 0 1px 3px rgba(18,28,43,0.08); backdrop-filter: blur(3px);
+}
+.efb-xp-b:hover { color: var(--gold-deep); border-color: var(--pink-soft); background: #fff; }
+.efb-xp-b:disabled { opacity: .55; cursor: progress; }
+.efb-xp-b svg { width: 13px; height: 13px; flex: 0 0 auto; }
+/* On a narrow screen the three labels crowd the heading they sit beside. */
+@media (max-width: 700px) { .efb-xp-b span { display: none; } .efb-xp-b { padding: 6px; } }
+
+.efb-modal {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(18,28,43,0.55); backdrop-filter: blur(2px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 40px 24px; overflow: auto;
+}
+body.efb-modal-open { overflow: hidden; }
+.efb-modal-box {
+  background: #fff; border-radius: var(--radius-lg); width: 100%; max-width: 1100px;
+  box-shadow: 0 24px 70px rgba(18,28,43,0.3); overflow: hidden;
+}
+.efb-modal-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--bg-app);
+  position: sticky; top: 0;
+}
+.efb-modal-title {
+  font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text);
+  flex: 1; min-width: 0;
+}
+.efb-modal-acts { display: flex; gap: 6px; flex: 0 0 auto; }
+.efb-modal-x { padding: 5px 7px; }
+.efb-modal-body { padding: 22px 24px 26px; }
+/* The clone keeps its own card chrome, which would double up inside the dialog. */
+.efb-modal-body > * { margin: 0 !important; box-shadow: none !important; }
+@media print { .efb-xp, .efb-modal { display: none !important; } }
 
 /* ── Per-page help, at the foot of every page ─────────────────────────────── */
 .efb-help { margin: 26px 0 8px; border-top: 1px solid var(--line-soft); padding-top: 18px; }
@@ -321,6 +407,213 @@ STYLE_FIXES = """
 .efb-ap-name .efb-tr-eff { margin-left: 0; }
 .efb-ap-market { font-size: 11.5px; font-weight: 600; color: var(--gold-deep); margin: 3px 0 4px; }
 .efb-ap-why { font-size: 12.5px; color: var(--text); line-height: 1.6; }
+"""
+
+
+EXPORT_SCRIPT = """
+<script>
+/* Section export: pop out, PNG, Word.
+   One control, attached to every block carrying data-export="slug|Title". Blocks the build
+   generates are tagged in the markup; blocks the template owns, and the two market cards the
+   template injects at runtime, are tagged from the AUTO list below. */
+(function () {
+  var AUTO = [
+    ['[data-page="overview"] .efb-intro',      'what-this-report-is|What this report is'],
+    ['[data-page="overview"] #bx-verdict',     'headline-position|Headline position'],
+    ['#bx-scorecard',                          'category-scorecard|Category scorecard'],
+    ['[data-page="provision"] .yb-overview',   'benefits-summary|Your benefits in summary'],
+    ['#bx-plan-summary',                       'plan-summary|Action plan summary'],
+    ['#bx-plan',                               'plan-priorities|Your priorities'],
+  ];
+
+  function tag(el, spec) {
+    if (el && !el.getAttribute('data-export')) el.setAttribute('data-export', spec);
+  }
+  function tagAuto(root) {
+    AUTO.forEach(function (pair) {
+      (root || document).querySelectorAll(pair[0]).forEach(function (el) { tag(el, pair[1]); });
+    });
+    // The two market cards are built by the template after load, so they cannot be tagged in
+    // the source. Name them from the heading they already carry.
+    document.querySelectorAll('.bx-market-top > .bx-card').forEach(function (card, i) {
+      var h = card.querySelector('.bx-mt-h');
+      if (!h) return;
+      var page = card.closest('.page');
+      var slug = (page ? page.dataset.page : 'section') + '-' + (i === 0 ? 'where-you-sit' : 'compare-market');
+      tag(card, slug + '|' + h.textContent.trim());
+    });
+  }
+
+  var ICON = {
+    pop:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>',
+    png:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
+    doc:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
+    close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+  };
+
+  function fileStem(slug) { return 'esmee-fairbairn-' + slug; }
+
+  /* A copy of the block with the furniture taken out: the export control itself, any other
+     buttons, and the SVG icons, which Word renders as empty boxes. */
+  function cleanClone(node) {
+    var c = node.cloneNode(true);
+    c.querySelectorAll('.efb-xp, .no-print, button, .rb-png-btn, .exp-toolbar').forEach(function (e) { e.remove(); });
+    return c;
+  }
+
+  function toPng(node, slug, done) {
+    if (!window.htmlToImage) { done('Image library unavailable'); return; }
+    var hide = node.querySelector('.efb-xp');
+    if (hide) hide.style.visibility = 'hidden';
+    window.htmlToImage.toPng(node, { backgroundColor: '#FFFFFF', pixelRatio: 2 })
+      .then(function (url) {
+        var a = document.createElement('a');
+        a.href = url; a.download = fileStem(slug) + '.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        done();
+      })
+      .catch(function (e) { console.error(e); done('Could not create the image'); })
+      .finally(function () { if (hide) hide.style.visibility = ''; });
+  }
+
+  /* Word opens an HTML document with the Office namespaces declared, so a .doc can be built
+     here with no library. Styles have to be inline-ish and simple: Word ignores most modern
+     CSS, so this restates the few things that carry meaning. */
+  function toWord(node, slug, title, done) {
+    try {
+      var body = cleanClone(node).innerHTML;
+      var css = 'body{font-family:Calibri,"Segoe UI",sans-serif;font-size:11pt;color:#121C2B;line-height:1.5}'
+        + 'h1,h2,h3,h4{font-family:Calibri,sans-serif;color:#121C2B;margin:14pt 0 6pt}'
+        + 'h1{font-size:18pt}h2{font-size:15pt}h3{font-size:13pt}h4{font-size:11.5pt}'
+        + 'table{border-collapse:collapse;width:100%}td,th{border:0.5pt solid #DEE1E6;padding:5pt 7pt;'
+        + 'font-size:10pt;vertical-align:top;text-align:left}th{background:#EEF1F6;font-weight:bold}'
+        + 'ul,ol{margin:6pt 0 6pt 18pt}li{margin-bottom:3pt}'
+        + '.efb-cn-b,.bx-sec-name,.rb-q-lbl,.bx-qlbl{font-weight:bold}'
+        + '.efb-cn-row,.bx-sec-row{margin-bottom:8pt}'
+        + 'svg,img{display:none}'
+        + '.hdr{border-bottom:1pt solid #C9785A;padding-bottom:6pt;margin-bottom:12pt}'
+        + '.hdr .b{font-size:8.5pt;letter-spacing:1pt;text-transform:uppercase;color:#7285A5}';
+      var head = '<html xmlns:o="urn:schemas-microsoft-com:office:office" '
+        + 'xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+        + '<head><meta charset="utf-8"><title>' + title + '</title>'
+        + '<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->'
+        + '<style>' + css + '</style></head><body>';
+      var hdr = '<div class="hdr"><div class="b">TwentySix &middot; Esm&eacute;e Fairbairn Foundation '
+        + '&middot; Benefits Benchmark</div><h1>' + title + '</h1></div>';
+      var blob = new Blob(['﻿', head + hdr + body + '</body></html>'],
+                          { type: 'application/msword' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = fileStem(slug) + '.doc';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      done();
+    } catch (e) { console.error(e); done('Could not create the document'); }
+  }
+
+  /* Pop out: the same block, wider, on its own. Useful for the market tables, which are the
+     densest thing here. */
+  var modal = null;
+  function popOut(node, slug, title) {
+    closeModal();
+    modal = document.createElement('div');
+    modal.className = 'efb-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', title);
+    modal.innerHTML =
+      '<div class="efb-modal-box">'
+      + '<div class="efb-modal-head"><span class="efb-modal-title">' + title + '</span>'
+      + '<span class="efb-modal-acts">'
+      + '<button type="button" class="efb-xp-b" data-act="png">' + ICON.png + '<span>PNG</span></button>'
+      + '<button type="button" class="efb-xp-b" data-act="word">' + ICON.doc + '<span>Word</span></button>'
+      + '<button type="button" class="efb-xp-b efb-modal-x" data-act="close" aria-label="Close">' + ICON.close + '</button>'
+      + '</span></div>'
+      + '<div class="efb-modal-body"></div></div>';
+    var host = modal.querySelector('.efb-modal-body');
+    host.appendChild(cleanClone(node));
+    document.body.appendChild(modal);
+    document.body.classList.add('efb-modal-open');
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) { closeModal(); return; }
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      var act = b.dataset.act;
+      if (act === 'close') { closeModal(); return; }
+      run(b, act, host.firstElementChild, slug, title);
+    });
+    document.addEventListener('keydown', onEsc);
+    modal.querySelector('.efb-modal-x').focus();
+  }
+  function onEsc(e) { if (e.key === 'Escape') closeModal(); }
+  function closeModal() {
+    if (!modal) return;
+    modal.remove(); modal = null;
+    document.body.classList.remove('efb-modal-open');
+    document.removeEventListener('keydown', onEsc);
+  }
+
+  function run(btn, act, node, slug, title) {
+    var label = btn.querySelector('span');
+    var orig = label ? label.textContent : '';
+    btn.disabled = true;
+    if (label) label.textContent = 'Working';
+    var finish = function (err) {
+      btn.disabled = false;
+      if (label) label.textContent = err ? 'Failed' : orig;
+      if (err) { console.error(err); setTimeout(function () { if (label) label.textContent = orig; }, 2500); }
+    };
+    if (act === 'png') toPng(node, slug, finish);
+    else toWord(node, slug, title, finish);
+  }
+
+  function attach(el) {
+    if (el.querySelector(':scope > .efb-xp')) return;
+    var spec = (el.getAttribute('data-export') || '').split('|');
+    var slug = spec[0] || 'section';
+    var title = spec[1] || 'Section';
+    var bar = document.createElement('div');
+    bar.className = 'efb-xp no-print';
+    bar.innerHTML =
+      '<button type="button" class="efb-xp-b" data-act="pop" title="Pop out">' + ICON.pop + '<span>Pop out</span></button>'
+      + '<button type="button" class="efb-xp-b" data-act="png" title="Download as PNG">' + ICON.png + '<span>PNG</span></button>'
+      + '<button type="button" class="efb-xp-b" data-act="word" title="Download for Word">' + ICON.doc + '<span>Word</span></button>';
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      e.preventDefault(); e.stopPropagation();
+      if (b.dataset.act === 'pop') popOut(el, slug, title);
+      else run(b, b.dataset.act, el, slug, title);
+    });
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.appendChild(bar);
+  }
+
+  function sweep() {
+    tagAuto();
+    document.querySelectorAll('[data-export]').forEach(attach);
+  }
+
+  // Expand all / Collapse all for the themes accordion.
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.efb-th-all');
+    if (!b) return;
+    var open = b.dataset.all === 'open';
+    var stack = b.closest('.efb-th-hd').nextElementSibling;
+    if (!stack) return;
+    stack.querySelectorAll('details.efb-th').forEach(function (d) { d.open = open; });
+    b.dataset.all = open ? 'close' : 'open';
+    b.textContent = open ? 'Collapse all' : 'Expand all';
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sweep);
+  else sweep();
+  // The market cards are injected when a category page is first opened, so re-sweep on
+  // navigation rather than assuming everything exists at load.
+  window.addEventListener('hashchange', function () { setTimeout(sweep, 350); });
+  setTimeout(sweep, 1200);
+})();
+</script>
 """
 
 
@@ -513,7 +806,7 @@ def gen_overview(by_badge, counts):
 
 def gen_overview_intro(n_total, n_ok):
     """First thing on the page, for a reader who has never seen this dashboard."""
-    return f'''<div class="efb-intro" data-tour="intro">
+    return f'''<div class="efb-intro" data-tour="intro" data-export="what-this-report-is|What this report is">
       <div class="efb-intro-eyebrow">Start here</div>
       <h2>What this report is</h2>
       <p>We took the {n_total} benefits {CLIENT_SHORT} provides and compared each one against two
@@ -556,7 +849,7 @@ def gen_overview_intro(n_total, n_ok):
     </div>'''
 
 
-PLAN_INTRO = '''<div class="efb-intro" data-tour="plan-intro">
+PLAN_INTRO = '''<div class="efb-intro" data-tour="plan-intro" data-export="how-to-use-the-plan|What to change, and in what order">
             <div class="efb-intro-eyebrow">How to use this page</div>
             <h2>What to change, and in what order</h2>
             <p>If you were going to change something about the benefits package, this page says
@@ -662,7 +955,7 @@ def gen_method(method):
 def gen_position_overview(po):
     """Word for word from the consultant's own write-up. Opens Your Benefits."""
     paras = "".join(f"<p>{x}</p>" for x in po["paras"])
-    return f'''<div class="efb-pos">
+    return f'''<div class="efb-pos" data-export="market-position|Overview of market position">
       <div class="efb-pos-eyebrow">Our read</div>
       <h2 class="efb-pos-title">{po["title"]}</h2>
       {paras}
@@ -683,14 +976,24 @@ def gen_trends(benefits, trends, narrative):
           </div>''' for c in th["aon"])
 
     def theme_block(sec):
-        out = [f'''<h4 class="efb-th-h">{sec["h"]}</h4>''']
+        """
+        Collapsible, the same way the market tables expand a row. The write-up is long prose;
+        closed it becomes a scannable list of six themes, open it is unchanged.
+        """
+        out = []
         for para in sec.get("paras", []):
             out.append(f"<p>{para}</p>")
         if sec.get("list"):
             out.append("<ul>" + "".join(f"<li>{i}</li>" for i in sec["list"]) + "</ul>")
         for para in sec.get("after", []):
             out.append(f"<p>{para}</p>")
-        return f'''        <div class="efb-th">{"".join(out)}</div>'''
+        return f'''        <details class="efb-th">
+          <summary>
+            <span class="efb-th-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+            <span class="efb-th-txt"><span class="efb-th-h">{sec["h"]}</span><span class="efb-th-sum">{sec["summary"]}</span></span>
+          </summary>
+          <div class="efb-th-body">{"".join(out)}</div>
+        </details>'''
 
     themes = "\n".join(theme_block(sec) for sec in th["sections"])
 
@@ -731,22 +1034,27 @@ def gen_trends(benefits, trends, narrative):
             <p>{th["intro"]}</p>
           </div>
 
-          <div class="efb-aon">
+          <div class="efb-aon" data-export="market-emphasis|Where the market is moving">
 {aon}
           </div>
           <p class="efb-th-striking">{th["striking"]}</p>
-          <p class="efb-tr-sec-sub">{th["lead"]}</p>
+          <div class="efb-th-hd">
+            <p class="efb-tr-sec-sub" style="margin:0">{th["lead"]}</p>
+            <button type="button" class="efb-th-all no-print" data-all="open">Expand all</button>
+          </div>
+          <div class="efb-th-stack" data-export="market-themes|Benefits trends and themes">
 {themes}
+          </div>
 
           <h3 class="efb-tr-sec">You might also consider</h3>
           <p class="efb-tr-sec-sub">{th["considerIntro"]}</p>
-          <div class="efb-cn">
+          <div class="efb-cn" data-export="also-consider|You might also consider">
 {nl.join(groups)}
           </div>
 
           <h3 class="efb-tr-sec">{wb["title"]}</h3>
           <p class="efb-tr-sec-sub">{wb["intro"]}</p>
-          <div class="efb-wb">{wb_items}</div>
+          <div class="efb-wb" data-export="wellbeing-strategy|An example of a well-being strategy">{wb_items}</div>
         </section>
       </section>
 
@@ -770,7 +1078,7 @@ def gen_consider_appendix(benefits):
               <div class="efb-ap-why">{b.get("why") or b["mDetail"]}</div>
             </div>''')
     nl = "\n"
-    return f'''          <div class="efb-ap-consider">
+    return f'''          <div class="efb-ap-consider" data-export="other-benefits-to-consider|Other benefits to consider">
             <h3 class="efb-tr-sec" style="margin-top:0">Other benefits to consider</h3>
             <p class="efb-tr-sec-sub">These are benefits comparable funders provide that are not currently part of
               Esm&eacute;e&rsquo;s package. None of them is a gap, so they sit outside the priorities above. <span class="no-print">The
@@ -806,6 +1114,10 @@ def gen_prov_stats(counts, total):
 
 def gen_js_data(meta, benefits):
     """The single source of truth the report's own scripts read."""
+    WHERE = {"above": "sits above the foundation upper quartile",
+             "at": "sits at the foundation median",
+             "watch": "sits below the foundation median and is worth a look",
+             "below": "sits below the foundation lower quartile"}
     haq, market_cat, blist, labels = {}, {}, [], {}
     for slug, b in benefits.items():
         labels[slug] = b["label"]
@@ -816,7 +1128,10 @@ def gen_js_data(meta, benefits):
         if e:
             row = {"slug": slug, "label": b["label"], "category": b["category"],
                    "badge": e["badge"], "posIdx": e["posIdx"],
-                   "current": e["current"], "effort": e["effort"]}
+                   "current": e["current"], "effort": e["effort"],
+                   # Restated on the category pages, so a reader does not have to infer
+                   # provision from where a marker sits on the bar.
+                   "sits": WHERE[e["badge"]]}
             if b.get("noMarket"):
                 row["noMarket"] = True
             blist.append(row)
@@ -1123,6 +1438,25 @@ def main():
     t = t.replace("    function goTo(slug, push = true) {",
                   "    const scrollMemory = {};\n    let lastSlug = null;\n\n"
                   "    function goTo(slug, push = true) {", 1)
+
+    # 11y2. Section export: pop out / PNG / Word ------------------------------
+    if "</body>" not in t:
+        sys.exit("BUILD FAILED: no </body> to attach the export script to")
+    t = t.replace("</body>", EXPORT_SCRIPT + "\n</body>", 1)
+
+    # 11y3. Restate provision on the category pages ---------------------------
+    # "Where you sit in X" drew a marker on a bar and left the reader to work out what
+    # Esmee actually provides, or to go back to Your Benefits for it. Say it in a sentence.
+    old_yp = ("        return '<div class=\"bx-yp\"><div class=\"bx-yp-top\"><span class=\"bx-yp-name\">'+b.label+'</span>'\n"
+              "          + '<span class=\"bx-chip bx-bg-'+st+'\" style=\"margin:0\">'+BX.svg(st==='good'?'check':'alert',12)+tag+'</span></div>'\n"
+              "          + BX.posBar(b.posIdx) + BX.qCards(b.slug) + '</div>';")
+    new_yp = ("        return '<div class=\"bx-yp\"><div class=\"bx-yp-top\"><span class=\"bx-yp-name\">'+b.label+'</span>'\n"
+              "          + '<span class=\"bx-chip bx-bg-'+st+'\" style=\"margin:0\">'+BX.svg(st==='good'?'check':'alert',12)+tag+'</span></div>'\n"
+              "          + '<div class=\"bx-yp-cur\">Esm\\u00e9e Fairbairn provides <b>'+b.current+'</b>, which '+(b.sits||'')+'.</div>'\n"
+              "          + BX.posBar(b.posIdx) + BX.qCards(b.slug) + '</div>';")
+    if old_yp not in t:
+        sys.exit("BUILD FAILED: could not patch the Where-you-sit renderer")
+    t = t.replace(old_yp, new_yp, 1)
 
     # 11z. Styling corrections ------------------------------------------------
     if "</style>\n</head>" not in t:

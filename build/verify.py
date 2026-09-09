@@ -12,6 +12,7 @@ grep cannot see, which is a page that builds fine and then throws on load.
 
 import json
 import pathlib
+import tempfile
 import re
 import sys
 
@@ -310,6 +311,78 @@ def browser_checks():
               f"the {have} initiatives Esmee already provides are marked, not suggested")
         check(pg.eval_on_selector_all('.efb-wb-item', "e => e.length") == len(data["narrative"]["wellbeing"]["items"]),
               "Trends carries the wellbeing strategy example")
+
+        # ── Section export: pop out, PNG, Word ───────────────────────────────
+        pg.evaluate("location.hash = 'core'"); pg.wait_for_timeout(900)
+        tagged = pg.eval_on_selector_all('[data-export]', "e => e.length")
+        bars = pg.eval_on_selector_all('.efb-xp', "e => e.length")
+        check(tagged > 12 and bars == tagged,
+              f"every exportable block has an export control ({bars} of {tagged})")
+        # The two market cards per category page are injected at runtime, so they cannot be
+        # tagged in the source and are picked up by the sweep instead.
+        check(pg.eval_on_selector_all('.bx-market-top > .bx-card[data-export]', "e => e.length") == 12,
+              "the runtime-injected market cards are tagged too")
+
+        pg.evaluate("location.hash = 'overview'"); pg.wait_for_timeout(600)
+        sel = '[data-export^="what-this-report-is"]'
+        pg.eval_on_selector(sel + ' .efb-xp', "e => e.style.opacity = 1")
+        with pg.expect_download(timeout=45000) as dl:
+            pg.click(sel + ' [data-act="png"]')
+        png = dl.value
+        png_path = pathlib.Path(tempfile.gettempdir()) / "efb-check.png"
+        png.save_as(png_path)
+        check(png.suggested_filename.endswith(".png") and png_path.stat().st_size > 20000,
+              f"PNG export downloads a real image ({png_path.stat().st_size:,} bytes)")
+        with pg.expect_download(timeout=45000) as dl:
+            pg.click(sel + ' [data-act="word"]')
+        doc = dl.value
+        doc_path = pathlib.Path(tempfile.gettempdir()) / "efb-check.doc"
+        doc.save_as(doc_path)
+        body = doc_path.read_text(encoding="utf-8", errors="replace")
+        check(doc.suggested_filename.endswith(".doc") and len(body) > 1500,
+              f"Word export downloads a real document ({len(body):,} bytes)")
+        check("schemas-microsoft-com:office:word" in body,
+              "the Word file declares the Office namespaces so Word opens it")
+        check("<svg" not in body and "efb-xp" not in body,
+              "the Word file drops the icons and the export control itself")
+        for f in (png_path, doc_path):
+            f.unlink(missing_ok=True)
+
+        pg.click(sel + ' [data-act="pop"]'); pg.wait_for_timeout(500)
+        check(pg.eval_on_selector_all('.efb-modal', "e => e.length") == 1, "pop out opens a dialog")
+        check(pg.eval_on_selector_all('.efb-modal .efb-xp', "e => e.length") == 0,
+              "the popped-out copy does not carry its own export control")
+        pg.keyboard.press("Escape"); pg.wait_for_timeout(400)
+        check(pg.eval_on_selector_all('.efb-modal', "e => e.length") == 0, "Escape closes the dialog")
+
+        # ── Provision restated on the category pages ─────────────────────────
+        # Without this the reader has to infer provision from a marker position, or go back
+        # to Your Benefits for it.
+        # Includes the no-market benefit: it has no quartiles but still appears in its
+        # category panel, and its provision should be stated like any other.
+        held = [b for b in bens.values() if b.get("esmee")]
+        pg.evaluate("location.hash = 'core'"); pg.wait_for_timeout(900)
+        sentences = pg.eval_on_selector_all('.bx-yp-cur', "e => e.map(x => x.textContent.trim())")
+        check(len(sentences) == len(held),
+              f"provision is restated for all {len(held)} benefits on the category pages")
+        check(not [x for x in sentences if "which ." in x or "provides ," in x],
+              "no provision sentence is missing its figure or its position")
+        check(all(x.startswith("Esm") and x.endswith(".") for x in sentences),
+              "each provision sentence is a complete sentence")
+
+        # ── Trends themes read as an accordion ───────────────────────────────
+        pg.evaluate("location.hash = 'trends'"); pg.wait_for_timeout(700)
+        n_th = len(data["narrative"]["themes"]["sections"])
+        check(pg.eval_on_selector_all('details.efb-th', "e => e.length") == n_th,
+              f"all {n_th} themes render as collapsible rows")
+        check(pg.eval_on_selector_all('details.efb-th[open]', "e => e.length") == 0,
+              "themes start collapsed, so the page can be scanned")
+        check(pg.eval_on_selector_all('.efb-th-sum', "e => e.filter(x => x.textContent.trim()).length") == n_th,
+              "every theme carries a one-line summary")
+        pg.click('.efb-th-all'); pg.wait_for_timeout(400)
+        check(pg.eval_on_selector_all('details.efb-th[open]', "e => e.length") == n_th, "Expand all opens them")
+        pg.click('.efb-th-all'); pg.wait_for_timeout(400)
+        check(pg.eval_on_selector_all('details.efb-th[open]', "e => e.length") == 0, "Collapse all closes them")
 
         # Our read of the position opens Your Benefits, and the method note is on Overview.
         pg.evaluate("location.hash = 'provision'"); pg.wait_for_timeout(400)
