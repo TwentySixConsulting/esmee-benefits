@@ -258,7 +258,7 @@ STYLE_FIXES = """
 .efb-th-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .efb-th-h { font-family: var(--font-serif); font-size: 14.5px; font-weight: 600; color: var(--text); }
 .efb-th-sum { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; }
-.efb-th-body { padding: 2px 18px 16px 44px; }
+.efb-th-body { padding: 2px 18px 18px 68px; }
 .efb-th-body p { font-size: 13px; color: var(--text); line-height: 1.7; margin: 0 0 9px; }
 .efb-th-body p:last-child { margin-bottom: 0; }
 .efb-th-body ul { margin: 0 0 9px; padding-left: 19px; }
@@ -275,6 +275,20 @@ STYLE_FIXES = """
 .efb-wb-item p { font-size: 12.5px; color: var(--text); line-height: 1.6; margin: 0; }
 
 /* ── "You might also consider": the benefit, then the reasoning ──────────── */
+.efb-toc { margin: 12px 0 0; padding-left: 20px; }
+.efb-toc li { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 5px; }
+.efb-toc b { color: var(--text); }
+.efb-th-n {
+  flex: 0 0 auto; width: 21px; height: 21px; border-radius: 999px; margin-top: 1px;
+  background: var(--slate-soft); color: var(--slate-deep);
+  font-family: var(--font-sans); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.efb-th[open] .efb-th-n { background: var(--gold); color: #fff; }
+.efb-cn-count {
+  float: right; font-family: var(--font-sans); font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft);
+}
 .efb-cn-group { margin-bottom: 20px; }
 .efb-cn-gh {
   font-size: 10.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
@@ -290,10 +304,13 @@ STYLE_FIXES = """
 .efb-cn-b {
   font-family: var(--font-serif); font-size: 14px; font-weight: 600; color: var(--text);
   line-height: 1.4;
+  /* Column, not inline: trailing the tag after the text left it hanging off the end of a
+     wrapped name on some rows and sitting neatly under others. */
+  display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
 }
 .efb-cn-r { font-size: 13px; color: var(--text); line-height: 1.65; }
 .efb-cn-tag, .efb-cn-have {
-  display: inline-block; margin-left: 8px; vertical-align: 2px;
+  display: inline-block;
   font-family: var(--font-sans); font-size: 9.5px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   border-radius: 999px; padding: 3px 8px; white-space: nowrap;
@@ -309,12 +326,35 @@ STYLE_FIXES = """
 }
 .bx-yp-cur b { color: var(--text); font-weight: 700; }
 
-/* ── Section export: pop out, PNG, Word ──────────────────────────────────── */
+/* ── "Where you sit": clearer separation and a firmer benefit name ────────── */
+.bx-market-top .bx-yp { padding: 15px 0 14px; }
+.bx-market-top .bx-yp:first-of-type { padding-top: 6px; }
+.bx-market-top .bx-yp:last-of-type { padding-bottom: 2px; }
+.bx-market-top .bx-yp-top { margin-bottom: 7px; }
+.bx-market-top .bx-yp-name {
+  font-family: var(--font-serif); font-size: 14px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.005em;
+}
+
+/* ── Section export: PNG and Word ──────────────────────────────────── */
 .efb-xp {
-  position: absolute; top: 10px; right: 10px; z-index: 5;
+  position: absolute; top: 12px; right: 14px; z-index: 5;
   display: flex; gap: 4px;
   opacity: 0; transition: opacity .14s ease;
 }
+/* Reserve the corner so a heading never runs underneath the control. Permanent, not
+   hover-only, or the text would reflow the moment the control appeared. */
+[data-export] > h2,
+[data-export] .bx-verdict,
+[data-export] .efb-pos-title,
+[data-export] .yb-overview-title,
+[data-export] .bx-mt-h,
+[data-export] > .efb-tr-sec:first-child { padding-right: 124px; }
+/* Grid and stack containers have no padding of their own, so there is no corner to sit in.
+   Float the control just above the top edge instead; each of these follows a short intro
+   line, so there is nothing there to collide with. */
+.efb-xp-out { margin-top: 34px; }
+.efb-xp-out > .efb-xp { top: -30px; right: 0; }
 [data-export]:hover > .efb-xp,
 [data-export]:focus-within > .efb-xp { opacity: 1; }
 /* Touch and keyboard users never hover, so never reveal it. */
@@ -332,32 +372,7 @@ STYLE_FIXES = """
 /* On a narrow screen the three labels crowd the heading they sit beside. */
 @media (max-width: 700px) { .efb-xp-b span { display: none; } .efb-xp-b { padding: 6px; } }
 
-.efb-modal {
-  position: fixed; inset: 0; z-index: 9998;
-  background: rgba(18,28,43,0.55); backdrop-filter: blur(2px);
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 40px 24px; overflow: auto;
-}
-body.efb-modal-open { overflow: hidden; }
-.efb-modal-box {
-  background: #fff; border-radius: var(--radius-lg); width: 100%; max-width: 1100px;
-  box-shadow: 0 24px 70px rgba(18,28,43,0.3); overflow: hidden;
-}
-.efb-modal-head {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--bg-app);
-  position: sticky; top: 0;
-}
-.efb-modal-title {
-  font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text);
-  flex: 1; min-width: 0;
-}
-.efb-modal-acts { display: flex; gap: 6px; flex: 0 0 auto; }
-.efb-modal-x { padding: 5px 7px; }
-.efb-modal-body { padding: 22px 24px 26px; }
-/* The clone keeps its own card chrome, which would double up inside the dialog. */
-.efb-modal-body > * { margin: 0 !important; box-shadow: none !important; }
-@media print { .efb-xp, .efb-modal { display: none !important; } }
+@media print { .efb-xp { display: none !important; } }
 
 /* ── Per-page help, at the foot of every page ─────────────────────────────── */
 .efb-help { margin: 26px 0 8px; border-top: 1px solid var(--line-soft); padding-top: 18px; }
@@ -417,21 +432,30 @@ EXPORT_SCRIPT = """
    generates are tagged in the markup; blocks the template owns, and the two market cards the
    template injects at runtime, are tagged from the AUTO list below. */
 (function () {
+  /* sel: what to find. spec: slug|Title. up: climb to this ancestor, because some ids sit
+     on a heading rather than on the block it belongs to. out: the block is a grid or flex
+     container with no padding of its own, so the control floats above its top edge instead
+     of inside a corner that does not exist. */
   var AUTO = [
-    ['[data-page="overview"] .efb-intro',      'what-this-report-is|What this report is'],
-    ['[data-page="overview"] #bx-verdict',     'headline-position|Headline position'],
-    ['#bx-scorecard',                          'category-scorecard|Category scorecard'],
-    ['[data-page="provision"] .yb-overview',   'benefits-summary|Your benefits in summary'],
-    ['#bx-plan-summary',                       'plan-summary|Action plan summary'],
-    ['#bx-plan',                               'plan-priorities|Your priorities'],
+    { sel: '[data-page="overview"] .efb-intro',    spec: 'what-this-report-is|What this report is' },
+    { sel: '#bx-verdict',   spec: 'headline-position|Headline position', up: '.bx-card' },
+    { sel: '#bx-scorecard', spec: 'category-scorecard|Category scorecard', out: true },
+    { sel: '[data-page="provision"] .yb-overview', spec: 'benefits-summary|Your benefits in summary' },
+    { sel: '#bx-plan-summary', spec: 'plan-summary|Action plan summary', out: true },
+    { sel: '#bx-plan',         spec: 'plan-priorities|Your priorities',  out: true },
   ];
 
-  function tag(el, spec) {
-    if (el && !el.getAttribute('data-export')) el.setAttribute('data-export', spec);
+  function tag(el, spec, out) {
+    if (!el || el.getAttribute('data-export')) return;
+    el.setAttribute('data-export', spec);
+    if (out) el.classList.add('efb-xp-out');
   }
   function tagAuto(root) {
-    AUTO.forEach(function (pair) {
-      (root || document).querySelectorAll(pair[0]).forEach(function (el) { tag(el, pair[1]); });
+    AUTO.forEach(function (a) {
+      (root || document).querySelectorAll(a.sel).forEach(function (el) {
+        var target = a.up ? (el.closest(a.up) || el.parentElement) : el;
+        tag(target, a.spec, a.out);
+      });
     });
     // The two market cards are built by the template after load, so they cannot be tagged in
     // the source. Name them from the heading they already carry.
@@ -445,10 +469,9 @@ EXPORT_SCRIPT = """
   }
 
   var ICON = {
-    pop:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>',
     png:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
     doc:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
-    close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+    doc2: ''
   };
 
   function fileStem(slug) { return 'esmee-fairbairn-' + slug; }
@@ -511,48 +534,6 @@ EXPORT_SCRIPT = """
     } catch (e) { console.error(e); done('Could not create the document'); }
   }
 
-  /* Pop out: the same block, wider, on its own. Useful for the market tables, which are the
-     densest thing here. */
-  var modal = null;
-  function popOut(node, slug, title) {
-    closeModal();
-    modal = document.createElement('div');
-    modal.className = 'efb-modal';
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', title);
-    modal.innerHTML =
-      '<div class="efb-modal-box">'
-      + '<div class="efb-modal-head"><span class="efb-modal-title">' + title + '</span>'
-      + '<span class="efb-modal-acts">'
-      + '<button type="button" class="efb-xp-b" data-act="png">' + ICON.png + '<span>PNG</span></button>'
-      + '<button type="button" class="efb-xp-b" data-act="word">' + ICON.doc + '<span>Word</span></button>'
-      + '<button type="button" class="efb-xp-b efb-modal-x" data-act="close" aria-label="Close">' + ICON.close + '</button>'
-      + '</span></div>'
-      + '<div class="efb-modal-body"></div></div>';
-    var host = modal.querySelector('.efb-modal-body');
-    host.appendChild(cleanClone(node));
-    document.body.appendChild(modal);
-    document.body.classList.add('efb-modal-open');
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) { closeModal(); return; }
-      var b = e.target.closest('[data-act]');
-      if (!b) return;
-      var act = b.dataset.act;
-      if (act === 'close') { closeModal(); return; }
-      run(b, act, host.firstElementChild, slug, title);
-    });
-    document.addEventListener('keydown', onEsc);
-    modal.querySelector('.efb-modal-x').focus();
-  }
-  function onEsc(e) { if (e.key === 'Escape') closeModal(); }
-  function closeModal() {
-    if (!modal) return;
-    modal.remove(); modal = null;
-    document.body.classList.remove('efb-modal-open');
-    document.removeEventListener('keydown', onEsc);
-  }
-
   function run(btn, act, node, slug, title) {
     var label = btn.querySelector('span');
     var orig = label ? label.textContent : '';
@@ -575,18 +556,48 @@ EXPORT_SCRIPT = """
     var bar = document.createElement('div');
     bar.className = 'efb-xp no-print';
     bar.innerHTML =
-      '<button type="button" class="efb-xp-b" data-act="pop" title="Pop out">' + ICON.pop + '<span>Pop out</span></button>'
-      + '<button type="button" class="efb-xp-b" data-act="png" title="Download as PNG">' + ICON.png + '<span>PNG</span></button>'
+      '<button type="button" class="efb-xp-b" data-act="png" title="Download as PNG">' + ICON.png + '<span>PNG</span></button>'
       + '<button type="button" class="efb-xp-b" data-act="word" title="Download for Word">' + ICON.doc + '<span>Word</span></button>';
     bar.addEventListener('click', function (e) {
       var b = e.target.closest('[data-act]');
       if (!b) return;
       e.preventDefault(); e.stopPropagation();
-      if (b.dataset.act === 'pop') popOut(el, slug, title);
-      else run(b, b.dataset.act, el, slug, title);
+      run(b, b.dataset.act, el, slug, title);
     });
     if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
     el.appendChild(bar);
+    if (!el.classList.contains('efb-xp-out')) avoidCollision(el, bar);
+  }
+
+  /* Some corners are already taken: the headline card has a status chip there. Rather than
+     keep a list of exceptions, measure once and move the control above the block if
+     something is genuinely under it.
+
+     Measure TEXT rects, not element boxes. A block-level eyebrow or heading spans the full
+     width even when its words stop well short of the corner, so element boxes report a
+     collision for almost everything and the control ends up floating above blocks that had
+     room for it. Range.getClientRects gives the glyph boxes. */
+  function avoidCollision(el, bar) {
+    var prev = bar.style.opacity;
+    bar.style.opacity = '1';
+    var br = bar.getBoundingClientRect();
+    var clash = false;
+    if (br.width) {
+      var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      var n, rg = document.createRange();
+      while (!clash && (n = walk.nextNode())) {
+        if (!n.nodeValue.trim() || bar.contains(n)) continue;
+        rg.selectNodeContents(n);
+        var rects = rg.getClientRects();
+        for (var i = 0; i < rects.length; i++) {
+          var r = rects[i];
+          if (!(r.right < br.left + 1 || r.left > br.right - 1 ||
+                r.bottom < br.top + 1 || r.top > br.bottom - 1)) { clash = true; break; }
+        }
+      }
+    }
+    bar.style.opacity = prev;
+    if (clash) el.classList.add('efb-xp-out');
   }
 
   function sweep() {
@@ -975,7 +986,7 @@ def gen_trends(benefits, trends, narrative):
             <ol>{"".join(f"<li>{i}</li>" for i in c["items"])}</ol>
           </div>''' for c in th["aon"])
 
-    def theme_block(sec):
+    def theme_block(sec, n):
         """
         Collapsible, the same way the market tables expand a row. The write-up is long prose;
         closed it becomes a scannable list of six themes, open it is unchanged.
@@ -989,13 +1000,14 @@ def gen_trends(benefits, trends, narrative):
             out.append(f"<p>{para}</p>")
         return f'''        <details class="efb-th">
           <summary>
+            <span class="efb-th-n">{n}</span>
             <span class="efb-th-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
             <span class="efb-th-txt"><span class="efb-th-h">{sec["h"]}</span><span class="efb-th-sum">{sec["summary"]}</span></span>
           </summary>
           <div class="efb-th-body">{"".join(out)}</div>
         </details>'''
 
-    themes = "\n".join(theme_block(sec) for sec in th["sections"])
+    themes = "\n".join(theme_block(sec, i) for i, sec in enumerate(th["sections"], 1))
 
     groups = []
     for g in th["consider"]:
@@ -1009,8 +1021,9 @@ def gen_trends(benefits, trends, narrative):
               <div class="efb-cn-r">{it["r"]}</div>
             </div>''')
         nl2 = "\n"
+        n_new = sum(1 for i in g["items"] if not i.get("have"))
         groups.append(f'''          <div class="efb-cn-group">
-            <div class="efb-cn-gh">{g["theme"]}</div>
+            <div class="efb-cn-gh">{g["theme"]}<span class="efb-cn-count">{n_new} to consider</span></div>
 {nl2.join(rows)}
           </div>''')
 
@@ -1028,13 +1041,21 @@ def gen_trends(benefits, trends, narrative):
             <h2 class="sec-title">Trends &amp; Themes</h2>
           </div>
 
-          <div class="efb-intro">
-            <div class="efb-intro-eyebrow">What this page is</div>
-            <h2>Where the market is moving</h2>
+          <div class="page-overview">
+            <div class="page-overview-eyebrow">On this page</div>
+            <h3 class="page-overview-title">Where the market is moving</h3>
             <p>{th["intro"]}</p>
+            <ol class="efb-toc">
+              <li><b>The headline themes</b>, as every survey we reviewed agreed on them</li>
+              <li><b>Each theme in turn</b>, six collapsible sections</li>
+              <li><b>You might also consider</b>, every initiative named, with its reasoning</li>
+              <li><b>A well-being strategy</b>, an example of the joined-up approach</li>
+            </ol>
           </div>
 
-          <div class="efb-aon" data-export="market-emphasis|Where the market is moving">
+          <h3 class="efb-tr-sec" style="margin-top:26px">The headline themes</h3>
+          <p class="efb-tr-sec-sub">Summarised by Aon&rsquo;s research.</p>
+          <div class="efb-aon efb-xp-out" data-export="market-emphasis|Where the market is moving">
 {aon}
           </div>
           <p class="efb-th-striking">{th["striking"]}</p>
@@ -1042,19 +1063,19 @@ def gen_trends(benefits, trends, narrative):
             <p class="efb-tr-sec-sub" style="margin:0">{th["lead"]}</p>
             <button type="button" class="efb-th-all no-print" data-all="open">Expand all</button>
           </div>
-          <div class="efb-th-stack" data-export="market-themes|Benefits trends and themes">
+          <div class="efb-th-stack efb-xp-out" data-export="market-themes|Benefits trends and themes">
 {themes}
           </div>
 
           <h3 class="efb-tr-sec">You might also consider</h3>
           <p class="efb-tr-sec-sub">{th["considerIntro"]}</p>
-          <div class="efb-cn" data-export="also-consider|You might also consider">
+          <div class="efb-cn efb-xp-out" data-export="also-consider|You might also consider">
 {nl.join(groups)}
           </div>
 
           <h3 class="efb-tr-sec">{wb["title"]}</h3>
           <p class="efb-tr-sec-sub">{wb["intro"]}</p>
-          <div class="efb-wb" data-export="wellbeing-strategy|An example of a well-being strategy">{wb_items}</div>
+          <div class="efb-wb efb-xp-out" data-export="wellbeing-strategy|An example of a well-being strategy">{wb_items}</div>
         </section>
       </section>
 

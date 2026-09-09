@@ -348,12 +348,45 @@ def browser_checks():
         for f in (png_path, doc_path):
             f.unlink(missing_ok=True)
 
-        pg.click(sel + ' [data-act="pop"]'); pg.wait_for_timeout(500)
-        check(pg.eval_on_selector_all('.efb-modal', "e => e.length") == 1, "pop out opens a dialog")
-        check(pg.eval_on_selector_all('.efb-modal .efb-xp', "e => e.length") == 0,
-              "the popped-out copy does not carry its own export control")
-        pg.keyboard.press("Escape"); pg.wait_for_timeout(400)
-        check(pg.eval_on_selector_all('.efb-modal', "e => e.length") == 0, "Escape closes the dialog")
+        check(pg.eval_on_selector_all('[data-act="pop"]', "e => e.length") == 0,
+              "pop out is gone; the control is PNG and Word only")
+        check(pg.eval_on_selector('.efb-xp', "e => e.children.length") == 2,
+              "two buttons per control")
+
+        # The control is absolutely positioned, so it can land on top of a heading or a
+        # status chip. Measure TEXT rects across every page: element boxes span the full
+        # width even when the words stop short, which reports collisions that are not real.
+        for page in ("overview", "provision", "core", "trends", "action-plan"):
+            pg.evaluate(f"location.hash = '{page}'")
+            pg.wait_for_timeout(650)
+        covered = pg.evaluate("""() => {
+          const bad = [];
+          document.querySelectorAll('[data-export]').forEach(el => {
+            const bar = el.querySelector(':scope > .efb-xp'); if (!bar) return;
+            bar.style.opacity = 1;
+            const br = bar.getBoundingClientRect();
+            if (!br.width) { bar.style.opacity = ''; return; }
+            const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+            let n, hit = null, rg = document.createRange();
+            while (!hit && (n = w.nextNode())) {
+              if (!n.nodeValue.trim() || bar.contains(n)) continue;
+              const par = n.parentElement;
+              if (!par || !par.offsetWidth || par.closest('.efb-xp')) continue;
+              rg.selectNodeContents(n);
+              for (const r of rg.getClientRects())
+                if (!(r.right < br.left+1 || r.left > br.right-1 ||
+                      r.bottom < br.top+1 || r.top > br.bottom-1)) {
+                  hit = n.nodeValue.trim().slice(0, 44); break;
+                }
+            }
+            bar.style.opacity = '';
+            if (hit) bad.push((el.dataset.export || '').split('|')[0] + ' <- ' + hit);
+          });
+          return bad;
+        }""")
+        check(not covered, f"no export control covers any text ({len(covered)} collisions)")
+        for c in covered:
+            print(f"         COVERS {c}")
 
         # ── Provision restated on the category pages ─────────────────────────
         # Without this the reader has to infer provision from a marker position, or go back
@@ -379,6 +412,15 @@ def browser_checks():
               "themes start collapsed, so the page can be scanned")
         check(pg.eval_on_selector_all('.efb-th-sum', "e => e.filter(x => x.textContent.trim()).length") == n_th,
               "every theme carries a one-line summary")
+        check(pg.eval_on_selector_all('.efb-th-n', "e => e.map(x => x.textContent)") ==
+              [str(i) for i in range(1, n_th + 1)],
+              "themes are numbered in order, as the market sections are")
+        check(pg.eval_on_selector_all('[data-page="trends"] .page-overview', "e => e.length") == 1,
+              "Trends opens with an on-this-page box, like the category pages")
+        check(pg.eval_on_selector_all('.efb-toc li', "e => e.length") == 4,
+              "the on-this-page box lists the four parts")
+        check(pg.eval_on_selector_all('.efb-cn-count', "e => e.length") == len(con),
+              "each consider group shows how many items it holds")
         pg.click('.efb-th-all'); pg.wait_for_timeout(400)
         check(pg.eval_on_selector_all('details.efb-th[open]', "e => e.length") == n_th, "Expand all opens them")
         pg.click('.efb-th-all'); pg.wait_for_timeout(400)
