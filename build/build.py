@@ -796,6 +796,22 @@ def gen_overview(by_badge, counts):
     n_strong, n_watch = counts["above"], counts["watch"] + counts["below"]
     n_ok = counts["above"] + counts["at"]
     n_total = sum(counts.values())
+    if n_watch == 0:
+        watch_line = ("Nothing is behind the market, so the question is where to lead rather than "
+                      "where to catch up.")
+    elif n_watch == 1:
+        only = (by_badge["watch"] + by_badge["below"])[0][0]
+        # "A ceiling rather than a gap" was fair when the two watch items sat at the median.
+        # It is not fair of a single item that is genuinely behind typical practice, so the
+        # singular case says what is actually true instead.
+        watch_line = (f"The one area worth attention is {only.lower()}, the single place the "
+                      "package sits behind typical practice for comparable foundations.")
+    else:
+        watch_line = (f"The {n_watch} areas worth attention are ceilings rather than gaps. "
+                      "Esm&eacute;e is competitive on both, without leading on either."
+                      if n_watch == 2 else
+                      f"The {n_watch} areas worth attention are ceilings rather than gaps, where "
+                      "Esm&eacute;e is competitive without leading.")
     return f'''<div class="yb-overview">
       <div class="yb-overview-head">
         <div class="yb-overview-eyebrow">Your benefits in summary</div>
@@ -804,8 +820,7 @@ def gen_overview(by_badge, counts):
       <p class="yb-overview-body">{n_ok} of {n_total} benefits sit at or above the foundation median, and none
         falls below the lower quartile. The 12.5% employer pension contribution is top-decile among UK
         foundations, the sick pay scheme reaches a full year of support, and the matched payroll giving is
-        something few funders offer. The {n_watch} areas worth attention are ceilings rather than
-        gaps. Esm&eacute;e is competitive on both, without leading on either.</p>
+        something few funders offer. {watch_line}</p>
       <div class="yb-overview-grid">
         <div class="yb-overview-card yb-overview-card-strength">
           <div class="yb-overview-card-head">Headline strengths</div>

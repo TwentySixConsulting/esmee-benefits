@@ -47,6 +47,8 @@ def main():
     data = json.loads(DATA.read_text(encoding="utf-8"))
     benefits = data["benefits"]
 
+    coherence_checks(benefits)
+
     print("\nData integrity")
     haq = js_object(t, "HA_Q")
     blist = js_object(t, "BENEFITS")
@@ -142,6 +144,48 @@ def main():
         print(f"{len(fails)} CHECK(S) FAILED")
         sys.exit(1)
     print(f"all checks passed{f', {len(warns)} warning(s)' if warns else ''}")
+
+
+def coherence_checks(benefits):
+    """
+    Catch the error that has now bitten this report four times: a benefit marked behind the
+    market against a median that describes NOT having it. Private medical, paternity, income
+    protection and personal development all went in wrong this way, each time because the
+    position was read off the employers who publish the richest version rather than off the
+    stated median.
+    """
+    print("\nPositions agree with the medians they are read against")
+    # Phrases that mean the median employer does NOT have the benefit. "none" on its own is
+    # too broad: private medical's median reads "or a health cash plan where there is none",
+    # where "none" is the alternative, not an absence.
+    ABSENT = ("not standard", "not offered", "not provided", "no named", "not typically offered",
+              "not paid", "no budget", "not yet standard", "is not a standard")
+    for slug, b in benefits.items():
+        e = b.get("esmee")
+        if not e or b.get("noMarket"):
+            continue
+        med = (b.get("m") or "").lower()
+        behind = e["badge"] in ("watch", "below")
+        describes_absence = any(t in med for t in ABSENT)
+        # If the median says most employers do NOT have this, an employer who does cannot be
+        # behind it. Either the position or the median is wrong.
+        check(not (behind and describes_absence),
+              f'{b["label"]}: marked "{e["badge"]}" against a median that describes absence'
+              if (behind and describes_absence) else f'{b["label"]}: position and median agree')
+
+    print("\nEvery ladder a position is read against has three distinct rungs")
+    for slug, b in benefits.items():
+        # Market-only benefits may legitimately repeat a rung: market.json's own note says
+        # that where the evidence does not support a split, lq/m/uq carry the same value and
+        # the detail says so. Wellbeing days is genuinely "not offered" at both LQ and median.
+        # It only becomes a bug when Esmee is positioned against that ladder.
+        if b.get("noMarket") or not b.get("esmee"):
+            continue
+        lq, m, uq = (b.get(k, "").strip().lower() for k in ("lq", "m", "uq"))
+        # Identical rungs are how the development budget ended up saying "no named budget"
+        # at both the lower quartile and the median.
+        check(not (lq and lq == m), f'{b["label"]}: lower quartile differs from median')
+        check(not (m and m == uq), f'{b["label"]}: median differs from upper quartile')
 
 
 def browser_checks():
