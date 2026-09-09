@@ -57,8 +57,8 @@ SECTOR_NOTE = {
     "core": "Foundations lead the wider third sector clearly on pension and hold a similar line on "
             "leave. The ONS puts the average voluntary-sector employer contribution at 5.8%, while a "
             "third of foundations contribute 10% or more. On leave the pattern reverses. Charities "
-            "start at a similar 25 days but build in far more service accrual, with Barnardo's reaching "
-            "30 days after seven years and Mind adding five paid wellbeing days on top.",
+            "start at a similar 25 days but build in far more service accrual, with large charities reaching "
+            "30 days after seven years and one adding five paid wellbeing days on top.",
     "working-time": "Flexible and hybrid working is close to universal in both groups, so neither is a "
             "differentiator any longer. What separates employers is how the policy is written, and "
             "whether it names the options rather than leaving each request to be weighed case by case.",
@@ -87,9 +87,9 @@ CALLOUT = {
              "largest size band. One lets staff claim back half the cost of wellbeing activities.",
              "A climate perks policy, giving additional leave for travelling by rail rather than flying.",
              "Birthday leave, and an unpaid sabbatical of two to six months after five years."],
-    "health": ["Health cash plans naming Health Shield and Medicash, giving every employee base cover "
+    "health": ["Health cash plans giving every employee base cover "
              "for dental, optical and physiotherapy costs at a fraction of the cost of private medical.",
-             "A private GP service and Bupa personal health reviews, offered alongside rather than "
+             "A private GP service and personal health reviews, offered alongside rather than "
              "instead of an employee assistance programme.",
              "Free eye tests for display screen users, cheap and named on several foundation careers pages."],
     "financial": ["Low-cost employee loans and savings accounts, offered alongside the season ticket "
@@ -102,7 +102,7 @@ CALLOUT = {
              "Give As You Earn arrangement.",
              "Ethical or ESG pension fund options, an obvious fit for a foundation whose endowment is "
              "already screened.",
-             "Paid volunteering days, offered by 39% of larger foundations and by City Bridge Foundation "
+             "Paid volunteering days, offered by 39% of larger foundations and by comparable funders "
              "at two days a year."],
     "learning": ["Paid development days as well as a budget. One foundation offers up to six a year, "
              "which removes the time barrier that a cash allowance alone does not.",

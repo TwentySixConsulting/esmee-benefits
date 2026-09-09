@@ -97,6 +97,17 @@ def main():
                  "hsf + perkbox", "zigbert"):
         check(term not in t.lower(), f'no "{term}"')
 
+    print("\nNo peer organisation named in client-facing copy")
+    # Another TwentySix client's package must never appear in this report, and the user
+    # asked that comparable funders be referred to generically rather than by name.
+    import re as _re
+    visible = _re.sub(r"<[^>]+>", " ", _re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", t))
+    for org in ("Wellcome", "Joseph Rowntree", "Paul Hamlyn", "Nuffield", "City Bridge",
+                "Comic Relief", "Health Foundation", "Shelter", "Barnardo", "MS Trust",
+                "Age UK", "National Lottery", "Virgin", "Guy", "GSTF", "St Thomas"):
+        hits = _re.findall(r"(?<![A-Za-z])" + _re.escape(org) + r"(?![A-Za-z])", visible)
+        check(not hits, f'"{org}" is not named')
+
     print("\nComparators")
     check("Large Private" not in t and "Small Private" not in t, "private-sector columns removed")
     check(t.count("Grant-making foundations") > 5, "foundations named as primary comparator")
