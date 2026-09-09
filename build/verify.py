@@ -91,7 +91,10 @@ def main():
     check(len(re.findall(r'class="rb-panel"', t)) == total, f"{total} provision cards rendered")
 
     print("\nNo previous client left in the file")
-    for term in ("brighton", "penge", "technolog", "hsf", "perkbox", "housing association", "bcs"):
+    # "perkbox" is no longer a marker: the Wellcome Trust example package legitimately names
+    # it as one of their published benefits. Test the template's own phrasing instead.
+    for term in ("brighton", "penge", "technolog", "hsf", "housing association", "bcs",
+                 "hsf + perkbox", "zigbert"):
         check(term not in t.lower(), f'no "{term}"')
 
     print("\nComparators")
@@ -195,7 +198,7 @@ def browser_checks():
         # about four seconds and renders nothing, so the button just looks broken. Audit
         # every anchor rather than trusting that the tours open.
         anchors = pg.evaluate("""() => {
-          const T = window.ZigbertTour.tours, out = [];
+          const T = window.TwentySixTour.tours, out = [];
           for (const key of Object.keys(T)) {
             location.hash = key;
             for (const [i, st] of T[key].steps.entries()) {
@@ -217,14 +220,14 @@ def browser_checks():
         for name in pages:
             pg.evaluate(f"location.hash = '{name}'")
             pg.wait_for_timeout(320)
-            if pg.eval_on_selector_all(".ztour-welcome-later", "e => e.length"):
-                pg.click(".ztour-welcome-later")
+            if pg.eval_on_selector_all(".tstour-welcome-later", "e => e.length"):
+                pg.click(".tstour-welcome-later")
                 pg.wait_for_timeout(150)
             pg.click(".ts-shell__tour")
             pg.wait_for_timeout(900)
-            shown = pg.eval_on_selector_all(".ztour-card", "e => e.filter(x => x.offsetHeight > 0).length")
+            shown = pg.eval_on_selector_all(".tstour-card", "e => e.filter(x => x.offsetHeight > 0).length")
             check(shown == 1, f"Tour this page opens a coachmark on {name}")
-            pg.evaluate("window.ZigbertTour.stop()")
+            pg.evaluate("window.TwentySixTour.stop()")
             pg.wait_for_timeout(120)
 
         # ── Per-page help ─────────────────────────────────────────────────────
@@ -241,8 +244,8 @@ def browser_checks():
         # step anchors, so those positions are legitimately remembered by now. Scroll memory
         # is per session, so a fresh load is what an unread page actually looks like.
         pg.goto(preview.as_uri()); pg.wait_for_timeout(1400)
-        if pg.eval_on_selector_all(".ztour-welcome-later", "e => e.length"):
-            pg.click(".ztour-welcome-later"); pg.wait_for_timeout(200)
+        if pg.eval_on_selector_all(".tstour-welcome-later", "e => e.length"):
+            pg.click(".tstour-welcome-later"); pg.wait_for_timeout(200)
         pg.evaluate("location.hash = 'core'"); pg.wait_for_timeout(500)
         pg.evaluate("document.body.scrollTop = 800"); pg.wait_for_timeout(250)
         moved = scroll_top()
@@ -270,10 +273,10 @@ def browser_checks():
         data = json.loads(DATA.read_text(encoding="utf-8"))
         bens = data["benefits"]
         want = [b["label"] for b in bens.values()
-                if not b.get("esmee") and not b.get("excludeFromConsider")]
+                if not b.get("esmee") and not b.get("excludeFromConsider") and not b.get("minor")]
         titles = pg.eval_on_selector_all('.efb-tr-title', "e => e.map(x => x.textContent)")
         check(sorted(titles) == sorted(want),
-              f"Trends suggests exactly the {len(want)} market benefits Esmee does not hold")
+              f"Trends suggests exactly the {len(want)} substantive benefits Esmee does not hold")
         check(pg.eval_on_selector_all('.efb-idea', "e => e.length") == len(data["trends"]["ideas"]),
               f"Trends lists all {len(data['trends']['ideas'])} sector ideas")
         # Esmee publishes a sabbatical, so suggesting one would tell the client to adopt
@@ -284,6 +287,32 @@ def browser_checks():
                       f'Trends does not suggest "{b["label"]}", which is an open query')
         check(pg.eval_on_selector_all('.efb-tr-query', "e => e.length") == 0,
               "Trends does not air the open query to the client")
+        check(pg.eval_on_selector_all('.efb-aon-col', "e => e.length") == 2,
+              "Trends carries both Aon emphasis columns")
+        check(pg.eval_on_selector_all('.efb-th', "e => e.length") == len(data["narrative"]["themes"]["sections"]),
+              f"Trends carries all {len(data['narrative']['themes']['sections'])} theme sections")
+        check(pg.eval_on_selector_all('.efb-pk', "e => e.length") == 2,
+              "Trends carries both example packages")
+        check(pg.eval_on_selector_all('.efb-wb-item', "e => e.length") == len(data["narrative"]["wellbeing"]["items"]),
+              "Trends carries the wellbeing strategy example")
+        check(pg.eval_on_selector_all('.efb-minor li', "e => e.length") ==
+              len([b for b in bens.values() if b.get("minor")]),
+              "Trends lists the smaller items to check")
+
+        # Our read of the position opens Your Benefits, and the method note is on Overview.
+        pg.evaluate("location.hash = 'provision'"); pg.wait_for_timeout(400)
+        check(pg.eval_on_selector_all('.efb-pos', "e => e.length") == 1,
+              "Your Benefits opens with our read of the market position")
+        first = pg.eval_on_selector('.page[data-page="provision"] .bx-wrap > *, .page[data-page="provision"] > * > *',
+                                    "e => e.className")
+        pg.evaluate("location.hash = 'overview'"); pg.wait_for_timeout(400)
+        check(pg.eval_on_selector_all('.efb-meth', "e => e.length") == 1,
+              "Overview carries the what-we-did note")
+        surveys = pg.eval_on_selector('.efb-meth', "e => e.textContent")
+        for survey in ("Alan Jones Associates", "CIPD Reward Management Survey",
+                       "Reward & Employee Benefits Association", "ThanksBen", "Drewberry",
+                       "Great Places to Work", "careers pages"):
+            check(survey in surveys, f'what-we-did names "{survey}"')
         check("trends" in pg.eval_on_selector_all('.navlink', "e => e.map(x => x.dataset.page)"),
               "Trends has a sidebar nav link")
         order = pg.eval_on_selector_all('.navlink', "e => e.map(x => x.dataset.page)")

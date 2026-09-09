@@ -1,13 +1,13 @@
-/* TwentySix · Zigbert — guided tour styling. Shared by the React app and the
+/* TwentySix — guided tour styling. Shared by the React app and the
    static Pay/Benefits pages. Sits above everything (header is z-400/menu z-401). */
 
-.ztour-root { position: fixed; inset: 0; z-index: 2147483000; }
+.tstour-root { position: fixed; inset: 0; z-index: 2147483000; }
 
 /* click-catcher behind the spotlight — clicking the dimmed area exits */
-.ztour-catch { position: absolute; inset: 0; cursor: default; }
+.tstour-catch { position: absolute; inset: 0; cursor: default; }
 
 /* the spotlight: a transparent box whose huge box-shadow dims everything else */
-.ztour-hole {
+.tstour-hole {
   position: fixed;
   border-radius: 14px;
   box-shadow: 0 0 0 9999px rgba(18, 28, 43, 0.55), 0 0 0 2px rgba(201, 120, 90, 0.9) inset;
@@ -17,7 +17,7 @@
 }
 
 /* tooltip card */
-.ztour-card {
+.tstour-card {
   position: fixed;
   width: 340px; max-width: calc(100vw - 24px);
   background: #ffffff;
@@ -30,33 +30,33 @@
   opacity: 0; transform: translateY(4px);
   transition: opacity .2s ease, transform .2s ease, left .22s cubic-bezier(.2,.7,.2,1), top .22s cubic-bezier(.2,.7,.2,1);
 }
-.ztour-in .ztour-card { opacity: 1; transform: translateY(0); }
+.tstour-in .tstour-card { opacity: 1; transform: translateY(0); }
 
-.ztour-progress { height: 3px; border-radius: 3px; background: #DEE1E6; overflow: hidden; margin-bottom: 12px; }
-.ztour-bar { display: block; height: 100%; background: linear-gradient(90deg, #C9785A, #B0603F); transition: width .3s ease; }
+.tstour-progress { height: 3px; border-radius: 3px; background: #DEE1E6; overflow: hidden; margin-bottom: 12px; }
+.tstour-bar { display: block; height: 100%; background: linear-gradient(90deg, #C9785A, #B0603F); transition: width .3s ease; }
 
-.ztour-count { font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #8A93A2; margin-bottom: 6px; }
-.ztour-title { font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif; font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 6px; color: #121C2B; }
-.ztour-body { font-size: 13.5px; line-height: 1.6; color: #4B5563; }
-.ztour-body b { color: #121C2B; font-weight: 600; }
+.tstour-count { font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #8A93A2; margin-bottom: 6px; }
+.tstour-title { font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif; font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 6px; color: #121C2B; }
+.tstour-body { font-size: 13.5px; line-height: 1.6; color: #4B5563; }
+.tstour-body b { color: #121C2B; font-weight: 600; }
 
-.ztour-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
-.ztour-nav { display: flex; align-items: center; gap: 8px; }
+.tstour-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
+.tstour-nav { display: flex; align-items: center; gap: 8px; }
 
-.ztour-card button { font-family: inherit; cursor: pointer; border-radius: 999px; font-weight: 600; transition: background .18s ease, color .18s ease, filter .18s ease, border-color .18s ease; }
-.ztour-skip { background: none; border: 0; color: #8A93A2; font-size: 12px; padding: 6px 2px; }
-.ztour-skip:hover { color: #4B5563; }
-.ztour-back { background: #fff; border: 1px solid #DEE1E6; color: #121C2B; font-size: 12.5px; padding: 7px 14px; }
-.ztour-back:hover { background: #F6F7F9; }
-.ztour-next { background: #fff; border: 1px solid #DEE1E6; color: #121C2B; font-size: 12.5px; padding: 7px 16px; }
-.ztour-primary { background: linear-gradient(135deg, #D88A6B 0%, #C9785A 52%, #B0603F 100%) !important; color: #fff !important; border: 0 !important; box-shadow: 0 8px 20px -8px rgba(176,96,63,.6); }
-.ztour-primary:hover { filter: brightness(1.05); }
+.tstour-card button { font-family: inherit; cursor: pointer; border-radius: 999px; font-weight: 600; transition: background .18s ease, color .18s ease, filter .18s ease, border-color .18s ease; }
+.tstour-skip { background: none; border: 0; color: #8A93A2; font-size: 12px; padding: 6px 2px; }
+.tstour-skip:hover { color: #4B5563; }
+.tstour-back { background: #fff; border: 1px solid #DEE1E6; color: #121C2B; font-size: 12.5px; padding: 7px 14px; }
+.tstour-back:hover { background: #F6F7F9; }
+.tstour-next { background: #fff; border: 1px solid #DEE1E6; color: #121C2B; font-size: 12.5px; padding: 7px 16px; }
+.tstour-primary { background: linear-gradient(135deg, #D88A6B 0%, #C9785A 52%, #B0603F 100%) !important; color: #fff !important; border: 0 !important; box-shadow: 0 8px 20px -8px rgba(176,96,63,.6); }
+.tstour-primary:hover { filter: brightness(1.05); }
 
-.ztour-close { position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; line-height: 1; font-size: 18px; background: none; border: 0; color: #8A93A2; border-radius: 999px; }
-.ztour-close:hover { color: #121C2B; background: #EBEEF3; }
+.tstour-close { position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; line-height: 1; font-size: 18px; background: none; border: 0; color: #8A93A2; border-radius: 999px; }
+.tstour-close:hover { color: #121C2B; background: #EBEEF3; }
 
 /* first-run welcome card (bottom-right) */
-.ztour-welcome {
+.tstour-welcome {
   position: fixed; right: 20px; bottom: 20px; z-index: 2147483000;
   width: 320px; max-width: calc(100vw - 32px);
   background: #fff; border: 1px solid #DEE1E6; border-radius: 18px;
@@ -65,59 +65,59 @@
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   opacity: 0; transform: translateY(10px); transition: opacity .3s ease, transform .3s ease;
 }
-.ztour-welcome.ztour-in { opacity: 1; transform: translateY(0); }
-.ztour-welcome::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; height: 2px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, transparent, rgba(201,120,90,.6), transparent); }
-.ztour-welcome-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.ztour-welcome-body { font-size: 13px; line-height: 1.55; color: #4B5563; }
-.ztour-welcome-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 14px; }
-.ztour-welcome button { font-family: inherit; cursor: pointer; border-radius: 999px; font-weight: 600; font-size: 12.5px; padding: 7px 16px; transition: filter .18s ease, background .18s ease; }
-.ztour-welcome-later { background: none; border: 0; color: #8A93A2; }
-.ztour-welcome-later:hover { color: #4B5563; }
+.tstour-welcome.tstour-in { opacity: 1; transform: translateY(0); }
+.tstour-welcome::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; height: 2px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, transparent, rgba(201,120,90,.6), transparent); }
+.tstour-welcome-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.tstour-welcome-body { font-size: 13px; line-height: 1.55; color: #4B5563; }
+.tstour-welcome-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.tstour-welcome button { font-family: inherit; cursor: pointer; border-radius: 999px; font-weight: 600; font-size: 12.5px; padding: 7px 16px; transition: filter .18s ease, background .18s ease; }
+.tstour-welcome-later { background: none; border: 0; color: #8A93A2; }
+.tstour-welcome-later:hover { color: #4B5563; }
 
 /* ── Home "Getting started" checklist ─────────────────────────
-   Rendered by tour.js into [data-zigbert-tour-checklist]. The mount sits inside
+   Rendered by tour.js into [data-ts-tour-checklist]. The mount sits inside
    Home's `space-y` stack, so collapse it while empty or it leaves a dead gap. */
-[data-zigbert-tour-checklist]:empty { display: none; }
-.ztour-cl {
+[data-ts-tour-checklist]:empty { display: none; }
+.tstour-cl {
   background: #fff; border: 1px solid #DEE1E6; border-radius: 18px;
   padding: 16px 16px 12px;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; color: #121C2B;
   box-shadow: 0 1px 2px rgba(18,28,43,.05);
 }
-.ztour-cl-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.ztour-cl-title { font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif; font-size: 13.5px; font-weight: 700; letter-spacing: -.01em; }
-.ztour-cl-count { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8A93A2; }
+.tstour-cl-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.tstour-cl-title { font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif; font-size: 13.5px; font-weight: 700; letter-spacing: -.01em; }
+.tstour-cl-count { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8A93A2; }
 
-.ztour-cl-track { height: 3px; border-radius: 3px; background: #DEE1E6; overflow: hidden; margin: 10px 0 12px; }
-.ztour-cl-fill { display: block; height: 100%; background: linear-gradient(90deg, #C9785A, #B0603F); transition: width .4s ease; }
+.tstour-cl-track { height: 3px; border-radius: 3px; background: #DEE1E6; overflow: hidden; margin: 10px 0 12px; }
+.tstour-cl-fill { display: block; height: 100%; background: linear-gradient(90deg, #C9785A, #B0603F); transition: width .4s ease; }
 
-.ztour-cl-rows { display: flex; flex-wrap: wrap; gap: 6px; }
-.ztour-cl-row {
+.tstour-cl-rows { display: flex; flex-wrap: wrap; gap: 6px; }
+.tstour-cl-row {
   flex: 1 1 auto; min-width: 150px;
   display: inline-flex; align-items: center; gap: 8px;
   background: #EBEEF3; border: 1px solid #E7EAEF; border-radius: 999px;
   padding: 7px 12px; cursor: pointer; font: inherit; text-align: left;
   transition: background .18s ease, border-color .18s ease;
 }
-.ztour-cl-row:hover { background: #fff; border-color: rgba(201,120,90,.45); }
-.ztour-cl-row.is-done { cursor: pointer; opacity: .72; }
+.tstour-cl-row:hover { background: #fff; border-color: rgba(201,120,90,.45); }
+.tstour-cl-row.is-done { cursor: pointer; opacity: .72; }
 
-.ztour-cl-tick {
+.tstour-cl-tick {
   width: 16px; height: 16px; flex: 0 0 16px; border-radius: 999px;
   display: inline-flex; align-items: center; justify-content: center;
   border: 1.5px solid #D3D8E0; font-size: 10px; line-height: 1; color: transparent;
 }
-.ztour-cl-row.is-done .ztour-cl-tick { background: #C9785A; border-color: #C9785A; color: #fff; }
+.tstour-cl-row.is-done .tstour-cl-tick { background: #C9785A; border-color: #C9785A; color: #fff; }
 
-.ztour-cl-label { flex: 1 1 auto; font-size: 12.5px; font-weight: 600; color: #121C2B; }
-.ztour-cl-meta { font-size: 11px; color: #8A93A2; }
-.ztour-cl-go { font-size: 11px; color: #C9785A; }
+.tstour-cl-label { flex: 1 1 auto; font-size: 12.5px; font-weight: 600; color: #121C2B; }
+.tstour-cl-meta { font-size: 11px; color: #8A93A2; }
+.tstour-cl-go { font-size: 11px; color: #C9785A; }
 
-.ztour-cl-dismiss {
+.tstour-cl-dismiss {
   margin-top: 10px; background: none; border: 0; padding: 2px;
   font: 600 11.5px/1 'Inter', sans-serif; color: #8A93A2; cursor: pointer;
 }
-.ztour-cl-dismiss:hover { color: #4B5563; }
+.tstour-cl-dismiss:hover { color: #4B5563; }
 
 /* the "Tour this page" launcher in the static shells */
 .ts-shell__tour {
@@ -129,5 +129,5 @@
 .ts-shell__tour:hover { background: #F6F7F9; border-color: rgba(201,120,90,.4); }
 
 @media (max-width: 640px) {
-  .ztour-card { width: calc(100vw - 24px); }
+  .tstour-card { width: calc(100vw - 24px); }
 }

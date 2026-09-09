@@ -1,4 +1,4 @@
-/* TwentySix · Zigbert — per-area guided tours.
+/* TwentySix — per-area guided tours.
  * Framework-agnostic: loaded on the React app AND the static Pay/Benefits pages.
  *
  * Five short, self-contained tours (3–5 steps, ~40 seconds), one per area. A tour
@@ -12,17 +12,17 @@
  * tour it; progress persists in localStorage so that survives the full-page load
  * between the three apps.
  *
- * Exposes window.ZigbertTour = {start, startTour, stop, resume}.
+ * Exposes window.TwentySixTour = {start, startTour, stop, resume}.
  */
 (function () {
   "use strict";
-  if (window.ZigbertTour) return; // already loaded
+  if (window.TwentySixTour) return; // already loaded
 
-  var KEY = "zigbert:tour";              // { active, tour, step } — in-flight position
-  var DONE = "zigbert:tour-done";        // { home: ts, pay: ts, … } — tours completed
-  var OFFERED = "zigbert:tour-offered";  // { home: ts, … } — first-run prompt already shown
-  var LEGACY = "zigbert:tour-seen";      // pre-split single flag, migrated on first load
-  var CL_OFF = "zigbert:tour-checklist-off";
+  var KEY = "ts26:tour";              // { active, tour, step } — in-flight position
+  var DONE = "ts26:tour-done";        // { home: ts, pay: ts, … } — tours completed
+  var OFFERED = "ts26:tour-offered";  // { home: ts, … } — first-run prompt already shown
+  var LEGACY = "ts26:tour-seen";      // pre-split single flag, migrated on first load
+  var CL_OFF = "ts26:tour-checklist-off";
 
   // ── state ────────────────────────────────────────────────────
   function getState() {
@@ -71,7 +71,7 @@
 
   // ── the tours ────────────────────────────────────────────────
   // This is a standalone, benefits-only report: one HTML document with a hash router,
-  // not the multi-app Zigbert platform. So there is one tour per REPORT PAGE, keyed by the
+  // not the multi-app TwentySix platform. So there is one tour per REPORT PAGE, keyed by the
   // page's data-page slug, and every step's anchor lives on that page. No tour navigates.
   var TOURS = {
     overview: {
@@ -121,7 +121,7 @@
     learning: catTour("learning", "Learning & Development"),
 
     trends: {
-      label: "Trends", secs: 30, page: "trends",
+      label: "Trends", secs: 40, page: "trends",
       steps: [
         { selector: "[data-page='trends'] .efb-intro", placement: "bottom",
           title: "Looking outward",
@@ -129,9 +129,15 @@
         { selector: "[data-page='trends'] .efb-tr-stack", placement: "top",
           title: "Benefits you do not currently offer",
           html: "Each card gives what the market does, why it might suit Esm&eacute;e, and whether it is a quick win or a budget decision. None of these is a gap." },
-        { selector: "[data-page='trends'] .efb-idea-stack", placement: "top",
-          title: "Growing practice",
-          html: "Ideas drawn from what funders and larger charities actually publish. Every one names its evidence, so you can weigh it rather than take it on trust." },
+        { selector: "[data-page='trends'] .efb-minor", placement: "top",
+          title: "Smaller items",
+          html: "Typical practice, but small enough that they are often provided without appearing on a benefits list. Worth checking against your own policies rather than assuming they are missing." },
+        { selector: "[data-page='trends'] .efb-aon", placement: "top",
+          title: "Where the market is moving",
+          html: "The themes every benefits survey we reviewed agreed on, summarised by Aon. Note how few of them are traditional benefits at all." },
+        { selector: "[data-page='trends'] .efb-pk-stack", placement: "top",
+          title: "Two packages worth seeing",
+          html: "One from the foundation sector and one from the private sector, both above typical practice. Neither has everything, and that is the point: a package has to fit the people it is for." },
       ],
     },
 
@@ -205,34 +211,34 @@
   function build() {
     if (root) return;
     root = document.createElement("div");
-    root.className = "ztour-root";
+    root.className = "tstour-root";
     root.innerHTML =
-      '<div class="ztour-catch"></div>' +
-      '<div class="ztour-hole"></div>' +
-      '<div class="ztour-card" role="dialog" aria-modal="true" aria-labelledby="ztour-title">' +
-        '<button class="ztour-close" aria-label="Close tour">×</button>' +
-        '<div class="ztour-progress"><span class="ztour-bar"></span></div>' +
-        '<div class="ztour-count"></div>' +
-        '<h3 class="ztour-title" id="ztour-title"></h3>' +
-        '<div class="ztour-body"></div>' +
-        '<div class="ztour-foot">' +
-          '<button class="ztour-skip" type="button">Skip</button>' +
-          '<div class="ztour-nav">' +
-            '<button class="ztour-back" type="button">Back</button>' +
-            '<button class="ztour-next ztour-primary" type="button">Next</button>' +
+      '<div class="tstour-catch"></div>' +
+      '<div class="tstour-hole"></div>' +
+      '<div class="tstour-card" role="dialog" aria-modal="true" aria-labelledby="tstour-title">' +
+        '<button class="tstour-close" aria-label="Close tour">×</button>' +
+        '<div class="tstour-progress"><span class="tstour-bar"></span></div>' +
+        '<div class="tstour-count"></div>' +
+        '<h3 class="tstour-title" id="tstour-title"></h3>' +
+        '<div class="tstour-body"></div>' +
+        '<div class="tstour-foot">' +
+          '<button class="tstour-skip" type="button">Skip</button>' +
+          '<div class="tstour-nav">' +
+            '<button class="tstour-back" type="button">Back</button>' +
+            '<button class="tstour-next tstour-primary" type="button">Next</button>' +
           '</div>' +
         '</div>' +
       '</div>';
     document.body.appendChild(root);
-    hole = root.querySelector(".ztour-hole");
-    card = root.querySelector(".ztour-card");
-    catcher = root.querySelector(".ztour-catch");
+    hole = root.querySelector(".tstour-hole");
+    card = root.querySelector(".tstour-card");
+    catcher = root.querySelector(".tstour-catch");
 
     catcher.addEventListener("click", stop);
-    root.querySelector(".ztour-close").addEventListener("click", stop);
-    root.querySelector(".ztour-skip").addEventListener("click", stop);
-    root.querySelector(".ztour-back").addEventListener("click", back);
-    root.querySelector(".ztour-next").addEventListener("click", onNext);
+    root.querySelector(".tstour-close").addEventListener("click", stop);
+    root.querySelector(".tstour-skip").addEventListener("click", stop);
+    root.querySelector(".tstour-back").addEventListener("click", back);
+    root.querySelector(".tstour-next").addEventListener("click", onNext);
     card.addEventListener("click", function (e) { e.stopPropagation(); });
     document.addEventListener("keydown", onKey, true);
   }
@@ -322,16 +328,16 @@
     if (last) { mark(DONE, key); renderChecklist(); }
 
     card.setAttribute("data-place", step.placement || "bottom");
-    root.querySelector(".ztour-title").innerHTML = step.title;
-    root.querySelector(".ztour-body").innerHTML = step.html;
-    root.querySelector(".ztour-count").textContent = tour.label + " · " + (i + 1) + " of " + steps.length;
-    root.querySelector(".ztour-bar").style.width = Math.round(((i + 1) / steps.length) * 100) + "%";
-    root.querySelector(".ztour-back").style.visibility = i === 0 ? "hidden" : "visible";
+    root.querySelector(".tstour-title").innerHTML = step.title;
+    root.querySelector(".tstour-body").innerHTML = step.html;
+    root.querySelector(".tstour-count").textContent = tour.label + " · " + (i + 1) + " of " + steps.length;
+    root.querySelector(".tstour-bar").style.width = Math.round(((i + 1) / steps.length) * 100) + "%";
+    root.querySelector(".tstour-back").style.visibility = i === 0 ? "hidden" : "visible";
 
     // Every tour ends where it started. The next area is never chained on; the
     // user gets nudged when they navigate there themselves (see maybeOffer).
-    var skipBtn = root.querySelector(".ztour-skip");
-    var nextBtn = root.querySelector(".ztour-next");
+    var skipBtn = root.querySelector(".tstour-skip");
+    var nextBtn = root.querySelector(".tstour-next");
     skipBtn.style.display = last ? "none" : "";
     if (!last) skipBtn.textContent = "Skip";
     nextBtn.textContent = last ? "Done" : "Next";
@@ -340,7 +346,7 @@
     findTarget(step.selector, function (el) {
       if (!root) return;
       if (el && el.scrollIntoView) el.scrollIntoView({ block: "center", behavior: "smooth" });
-      setTimeout(function () { place(el); root.classList.add("ztour-in"); }, el ? 260 : 0);
+      setTimeout(function () { place(el); root.classList.add("tstour-in"); }, el ? 260 : 0);
     });
   }
 
@@ -353,7 +359,7 @@
 
     if (isHere(s.tour)) {
       navigating = false;
-      try { sessionStorage.removeItem("ztour-nav"); } catch (e) {}
+      try { sessionStorage.removeItem("tstour-nav"); } catch (e) {}
       showStep(s.tour, i);
       return;
     }
@@ -362,9 +368,9 @@
     // Loop guard: if we just navigated here for this same tour and landed
     // somewhere else, give up quietly rather than ping-pong.
     var g = null;
-    try { g = JSON.parse(sessionStorage.getItem("ztour-nav") || "null"); } catch (e) {}
+    try { g = JSON.parse(sessionStorage.getItem("tstour-nav") || "null"); } catch (e) {}
     if (g && g.tour === s.tour && (Date.now() - g.t) < 5000) { stop(); return; }
-    try { sessionStorage.setItem("ztour-nav", JSON.stringify({ tour: s.tour, t: Date.now() })); } catch (e) {}
+    try { sessionStorage.setItem("tstour-nav", JSON.stringify({ tour: s.tour, t: Date.now() })); } catch (e) {}
     navigating = true;
     window.location.href = urlFor(s.tour);
   }
@@ -380,7 +386,7 @@
   function back() { go(-1); }
 
   function onNext() {
-    var btn = root && root.querySelector(".ztour-next");
+    var btn = root && root.querySelector(".tstour-next");
     if (btn && btn.getAttribute("data-last")) { stop(); return; }
     go(1);
   }
@@ -420,34 +426,34 @@
     var first = key === "overview";
 
     prompt = document.createElement("div");
-    prompt.className = "ztour-welcome";
+    prompt.className = "tstour-welcome";
     prompt.innerHTML =
-      '<div class="ztour-welcome-title">' +
+      '<div class="tstour-welcome-title">' +
         (first ? "New to this report?" : t.label + ", in brief") +
       '</div>' +
-      '<div class="ztour-welcome-body">' +
+      '<div class="tstour-welcome-body">' +
         (first
           ? "A " + t.secs + "-second look around. Every page has a short tour of its own, and you can bring it back any time with Tour this page."
           : "A " + t.secs + "-second tour of what's here and how to use it.") +
       '</div>' +
-      '<div class="ztour-welcome-foot">' +
-        '<button class="ztour-welcome-later" type="button">Not now</button>' +
-        '<button class="ztour-welcome-start ztour-primary" type="button">Show me</button>' +
+      '<div class="tstour-welcome-foot">' +
+        '<button class="tstour-welcome-later" type="button">Not now</button>' +
+        '<button class="tstour-welcome-start tstour-primary" type="button">Show me</button>' +
       '</div>';
     document.body.appendChild(prompt);
     var p = prompt;
-    requestAnimationFrame(function () { p.classList.add("ztour-in"); });
+    requestAnimationFrame(function () { p.classList.add("tstour-in"); });
 
-    p.querySelector(".ztour-welcome-later").addEventListener("click", function () {
+    p.querySelector(".tstour-welcome-later").addEventListener("click", function () {
       mark(OFFERED, key); dismissPrompt(); renderChecklist();
     });
-    p.querySelector(".ztour-welcome-start").addEventListener("click", function () { startTour(key); });
+    p.querySelector(".tstour-welcome-start").addEventListener("click", function () { startTour(key); });
   }
 
-  // ── Home checklist: [data-zigbert-tour-checklist] ────────────
+  // ── Home checklist: [data-ts-tour-checklist] ────────────
   function checklistOff() { try { return !!localStorage.getItem(CL_OFF); } catch (e) { return false; } }
   function renderChecklist() {
-    var mount = document.querySelector("[data-zigbert-tour-checklist]");
+    var mount = document.querySelector("[data-ts-tour-checklist]");
     if (!mount) return;
     var done = getMap(DONE);
     var count = 0;
@@ -458,26 +464,26 @@
 
     var rows = ORDER.map(function (k) {
       var t = TOURS[k], ok = !!done[k];
-      return '<button type="button" class="ztour-cl-row' + (ok ? " is-done" : "") + '" data-ztour-go="' + k + '">' +
-          '<span class="ztour-cl-tick" aria-hidden>' + (ok ? "✓" : "") + '</span>' +
-          '<span class="ztour-cl-label">' + t.label + '</span>' +
-          (ok ? '<span class="ztour-cl-meta">Toured</span>'
-              : '<span class="ztour-cl-meta">' + t.secs + "s</span><span class=\"ztour-cl-go\" aria-hidden>▸</span>") +
+      return '<button type="button" class="tstour-cl-row' + (ok ? " is-done" : "") + '" data-tstour-go="' + k + '">' +
+          '<span class="tstour-cl-tick" aria-hidden>' + (ok ? "✓" : "") + '</span>' +
+          '<span class="tstour-cl-label">' + t.label + '</span>' +
+          (ok ? '<span class="tstour-cl-meta">Toured</span>'
+              : '<span class="tstour-cl-meta">' + t.secs + "s</span><span class=\"tstour-cl-go\" aria-hidden>▸</span>") +
         '</button>';
     }).join("");
 
     mount.innerHTML =
-      '<div class="ztour-cl">' +
-        '<div class="ztour-cl-head">' +
-          '<span class="ztour-cl-title">Getting started</span>' +
-          '<span class="ztour-cl-count">' + count + " of " + ORDER.length + " areas</span>" +
+      '<div class="tstour-cl">' +
+        '<div class="tstour-cl-head">' +
+          '<span class="tstour-cl-title">Getting started</span>' +
+          '<span class="tstour-cl-count">' + count + " of " + ORDER.length + " areas</span>" +
         '</div>' +
-        '<div class="ztour-cl-track"><span class="ztour-cl-fill" style="width:' + Math.round((count / ORDER.length) * 100) + '%"></span></div>' +
-        '<div class="ztour-cl-rows">' + rows + '</div>' +
-        '<button type="button" class="ztour-cl-dismiss">Dismiss</button>' +
+        '<div class="tstour-cl-track"><span class="tstour-cl-fill" style="width:' + Math.round((count / ORDER.length) * 100) + '%"></span></div>' +
+        '<div class="tstour-cl-rows">' + rows + '</div>' +
+        '<button type="button" class="tstour-cl-dismiss">Dismiss</button>' +
       '</div>';
 
-    mount.querySelector(".ztour-cl-dismiss").addEventListener("click", function () {
+    mount.querySelector(".tstour-cl-dismiss").addEventListener("click", function () {
       try { localStorage.setItem(CL_OFF, "1"); } catch (e) {}
       mount.innerHTML = "";
     });
@@ -488,9 +494,9 @@
     var t = e.target;
     while (t && t !== document.body) {
       if (t.getAttribute) {
-        var go = t.getAttribute("data-ztour-go");
+        var go = t.getAttribute("data-tstour-go");
         if (go) { e.preventDefault(); startTour(go); return; }
-        var launch = t.getAttribute("data-zigbert-tour-start");
+        var launch = t.getAttribute("data-ts-tour-start");
         if (launch !== null) {
           e.preventDefault();
           // Only treat the value as a tour name if it actually names one. React
@@ -504,18 +510,18 @@
     }
   });
 
-  window.ZigbertTour = { start: start, startTour: startTour, stop: stop, resume: resume, tours: TOURS };
+  window.TwentySixTour = { start: start, startTour: startTour, stop: stop, resume: resume, tours: TOURS };
 
   function init() {
     migrateLegacy();
     // This script is `defer`red, so on the React app it runs before Home mounts.
     // Poll briefly for the checklist mount rather than guessing at a delay.
     renderChecklist();
-    if (!document.querySelector("[data-zigbert-tour-checklist]")) {
+    if (!document.querySelector("[data-ts-tour-checklist]")) {
       var tries = 0;
       var clTimer = setInterval(function () {
         tries++;
-        if (document.querySelector("[data-zigbert-tour-checklist]")) { clearInterval(clTimer); renderChecklist(); }
+        if (document.querySelector("[data-ts-tour-checklist]")) { clearInterval(clTimer); renderChecklist(); }
         else if (tries > 40) clearInterval(clTimer);
       }, 100);
     }

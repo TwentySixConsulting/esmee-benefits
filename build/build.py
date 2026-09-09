@@ -188,6 +188,92 @@ STYLE_FIXES = """
 .efb-sources p { font-size: 12.5px !important; color: var(--text) !important; line-height: 1.6; margin: 0 0 7px; }
 .efb-sources p:last-child { margin-bottom: 0; }
 
+/* ── "What we did", collapsed on the Overview ─────────────────────────────── */
+.efb-meth { margin-top: 16px; }
+.efb-meth summary {
+  cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 700; color: var(--gold-deep);
+  background: var(--pink-wash); border: 1px solid var(--pink-soft);
+  border-radius: 999px; padding: 7px 15px;
+}
+.efb-meth summary::-webkit-details-marker { display: none; }
+.efb-meth summary::before { content: "＋"; font-weight: 700; }
+.efb-meth[open] summary::before { content: "－"; }
+.efb-meth[open] summary { margin-bottom: 12px; }
+.efb-meth-body { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+.efb-meth-intro, .efb-meth-also { font-size: 13px !important; color: var(--text) !important; margin: 0 0 12px; }
+.efb-meth-also { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line-soft); color: var(--text-mid) !important; }
+.efb-meth-item { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line-soft); }
+.efb-meth-item:first-of-type { border-top: 0; padding-top: 0; }
+.efb-meth-n {
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 999px; background: var(--gold); color: #fff;
+  font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.efb-meth-h { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.efb-meth-item p { font-size: 12.5px !important; color: var(--text) !important; line-height: 1.6; margin: 0; }
+.efb-meth-item ul { margin: 7px 0 0; padding-left: 18px; }
+.efb-meth-item li { font-size: 12.5px; color: var(--text-mid); line-height: 1.65; }
+
+/* ── Our read of the position, opening Your Benefits ─────────────────────── */
+.efb-pos {
+  background: var(--cream); border: 1px solid var(--line); border-left: 3px solid var(--slate);
+  border-radius: var(--radius-lg); padding: 22px 26px; margin: 0 0 20px; box-shadow: var(--shadow-sm);
+}
+.efb-pos-eyebrow {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--slate-deep); margin-bottom: 8px;
+}
+.efb-pos-title {
+  font-family: var(--font-serif); font-size: 20px; font-weight: 600; color: var(--text);
+  margin: 0 0 12px; line-height: 1.25;
+}
+.efb-pos p { font-size: 14px; color: var(--text); line-height: 1.7; margin: 0 0 11px; }
+.efb-pos p:last-child { margin-bottom: 0; }
+
+/* ── Smaller items, and the themes ───────────────────────────────────────── */
+.efb-minor {
+  margin-top: 16px; background: var(--bg-app); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.efb-minor-h { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.efb-minor p { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; margin: 0 0 9px; }
+.efb-minor ul { margin: 0; padding-left: 18px; columns: 2; column-gap: 26px; }
+@media (max-width: 820px) { .efb-minor ul { columns: 1; } }
+.efb-minor li { font-size: 12.5px; color: var(--text); line-height: 1.6; margin-bottom: 6px; break-inside: avoid; }
+
+.efb-aon { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 4px 0 18px; }
+@media (max-width: 820px) { .efb-aon { grid-template-columns: 1fr; } }
+.efb-aon-col { background: var(--slate-soft); border: 1px solid rgba(107,122,153,0.22); border-radius: var(--radius); padding: 15px 18px; }
+.efb-aon-h { font-size: 12.5px; font-weight: 700; color: var(--slate-deep); margin-bottom: 8px; }
+.efb-aon-col ol { margin: 0; padding-left: 19px; }
+.efb-aon-col li { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 4px; }
+.efb-th-striking {
+  font-size: 13.5px; color: var(--text); line-height: 1.7; margin: 0 0 18px;
+  padding-left: 14px; border-left: 3px solid var(--gold);
+}
+.efb-th { margin-bottom: 18px; }
+.efb-th-h { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text); margin: 0 0 6px; }
+.efb-th p { font-size: 13px; color: var(--text); line-height: 1.7; margin: 0 0 9px; }
+.efb-th ul { margin: 0 0 9px; padding-left: 19px; }
+.efb-th li { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 5px; }
+
+/* ── Example packages, and the wellbeing strategy ────────────────────────── */
+.efb-pk-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 980px) { .efb-pk-stack { grid-template-columns: 1fr; } }
+.efb-pk { background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-sm); }
+.efb-pk-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line-soft); }
+.efb-pk-name { font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--text); }
+.efb-pk-kind { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); background: var(--pink-wash); border-radius: 999px; padding: 3px 9px; }
+.efb-pk-group { margin-bottom: 11px; }
+.efb-pk-gh { font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 4px; }
+.efb-pk-group ul { margin: 0; padding-left: 17px; }
+.efb-pk-group li { font-size: 12.5px; color: var(--text); line-height: 1.6; margin-bottom: 4px; }
+
+.efb-wb { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.efb-wb-item { background: var(--bg-app); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+.efb-wb-h { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.efb-wb-item p { font-size: 12.5px; color: var(--text); line-height: 1.6; margin: 0; }
+
 /* ── Per-page help, at the foot of every page ─────────────────────────────── */
 .efb-help { margin: 26px 0 8px; border-top: 1px solid var(--line-soft); padding-top: 18px; }
 .efb-help summary {
@@ -293,7 +379,7 @@ def icon_svg(cat, size=18, sw="1.6"):
 
 def load():
     data = json.loads(DATA.read_text(encoding="utf-8"))
-    return data["_meta"], data["benefits"], data["trends"]
+    return data["_meta"], data["benefits"], data["trends"], data["narrative"]
 
 
 # ────────────────────────────────────────────────────────────── markup generators
@@ -445,8 +531,8 @@ def gen_overview(by_badge, counts):
       <p class="yb-overview-body">{n_ok} of {n_total} benefits sit at or above the foundation median, and none
         falls below the lower quartile. The 12.5% employer pension contribution is top-decile among UK
         foundations, the sick pay scheme reaches a full year of support, and the matched payroll giving is
-        something few funders offer. The {n_watch} areas worth attention are ceilings rather than gaps:
-        competitive, but not leading.</p>
+        something few funders offer. The {n_watch} areas worth attention are ceilings rather than
+        gaps. Esm&eacute;e is competitive on both, without leading on either.</p>
       <div class="yb-overview-grid">
         <div class="yb-overview-card yb-overview-card-strength">
           <div class="yb-overview-card-head">Headline strengths</div>
@@ -594,7 +680,7 @@ def gen_help(page):
           <ul>
 {items}
           </ul>
-          <button class="efb-help-tour" type="button" data-zigbert-tour-start>Walk me through this page</button>
+          <button class="efb-help-tour" type="button" data-ts-tour-start>Walk me through this page</button>
         </div>
       </details>'''
 
@@ -602,19 +688,55 @@ def gen_help(page):
 CAT_LABEL = {s: html.unescape(l) for s, l, _, _ in CATEGORIES}
 
 
-def gen_trends(benefits, trends):
+def gen_method(method):
+    """What we did. This research sits behind the benchmarking and was not stated anywhere."""
+    strands = []
+    for i, st in enumerate(method["strands"], 1):
+        lst = ("<ul>" + "".join(f"<li>{x}</li>" for x in st["list"]) + "</ul>") if st.get("list") else ""
+        strands.append(f'''          <div class="efb-meth-item">
+            <div class="efb-meth-n">{i}</div>
+            <div>
+              <div class="efb-meth-h">{st["h"]}</div>
+              <p>{st["b"]}</p>
+              {lst}
+            </div>
+          </div>''')
+    nl = "\n"
+    return f'''<details class="efb-meth">
+        <summary>What we did</summary>
+        <div class="efb-meth-body">
+          <p class="efb-meth-intro">{method["intro"]}</p>
+{nl.join(strands)}
+          <p class="efb-meth-also">{method["also"]}</p>
+        </div>
+      </details>'''
+
+
+def gen_position_overview(po):
+    """Word for word from the consultant's own write-up. Opens Your Benefits."""
+    paras = "".join(f"<p>{x}</p>" for x in po["paras"])
+    return f'''<div class="efb-pos">
+      <div class="efb-pos-eyebrow">Our read</div>
+      <h2 class="efb-pos-title">{po["title"]}</h2>
+      {paras}
+    </div>'''
+
+
+def gen_trends(benefits, trends, narrative):
     """
-    Other benefits to consider: the market benefits Esmée does NOT hold, plus emerging
-    practice. Derived from the same market.json as everything else, so a benefit added to
-    Esmée's set automatically stops being suggested to her.
+    Trends and other benefits to consider. Three parts: benefits comparable funders provide
+    that Esmee does not, the sector themes from our own research, and two example packages.
+    The consider list is derived, so adding a benefit to Esmee's set removes it from here.
     """
     consider = [(s, b) for s, b in benefits.items()
-                if not b.get("esmee") and not b.get("excludeFromConsider")]
-    held_back = [(s, b) for s, b in benefits.items() if b.get("excludeFromConsider")]
+                if not b.get("esmee") and not b.get("excludeFromConsider") and not b.get("minor")]
+    minor = [(s, b) for s, b in benefits.items()
+             if not b.get("esmee") and not b.get("excludeFromConsider") and b.get("minor")]
 
     cards = []
     for slug, b in consider:
         quick = b.get("effort") == "quick"
+        why = b.get("why") or b.get("sp", "")
         cards.append(f'''          <div class="efb-tr-card">
             <div class="efb-tr-head">
               <div class="efb-tr-icon">{icon_svg(b["category"], 20)}</div>
@@ -627,16 +749,38 @@ def gen_trends(benefits, trends):
             <div class="efb-tr-grid">
               <div>
                 <div class="efb-tr-lbl">What the market does</div>
-                <p>{b["uqDetail"]}</p>
+                <p>{b["mDetail"]}</p>
               </div>
               <div>
                 <div class="efb-tr-lbl">Why it could suit Esm&eacute;e</div>
-                <p>{b["why"]}</p>
+                <p>{why}</p>
               </div>
             </div>
             <div class="efb-tr-foot"><span class="efb-tr-foot-lbl">Typical practice</span>{esc(b["m"])}
               <span class="efb-tr-sep">&middot;</span><span class="efb-tr-foot-lbl">Top of market</span>{esc(b["uq"])}</div>
           </div>''')
+
+    minor_rows = "".join(
+        f'''<li><b>{b["label"]}</b>. {esc(b["m"])}.</li>''' for _, b in minor)
+
+    # Aon's summary of where employers and employees say the emphasis is shifting.
+    th = narrative["themes"]
+    aon = "".join(f'''          <div class="efb-aon-col">
+            <div class="efb-aon-h">{c["h"]}</div>
+            <ol>{"".join(f"<li>{i}</li>" for i in c["items"])}</ol>
+          </div>''' for c in th["aon"])
+
+    def block(sec):
+        out = [f'''<h4 class="efb-th-h">{sec["h"]}</h4>''']
+        for para in sec.get("paras", []):
+            out.append(f"<p>{para}</p>")
+        if sec.get("list"):
+            out.append("<ul>" + "".join(f"<li>{i}</li>" for i in sec["list"]) + "</ul>")
+        for para in sec.get("after", []):
+            out.append(f"<p>{para}</p>")
+        return f'''        <div class="efb-th">{"".join(out)}</div>'''
+
+    themes = "\n".join(block(sec) for sec in th["sections"])
 
     ideas = []
     for i in trends["ideas"]:
@@ -652,18 +796,29 @@ def gen_trends(benefits, trends):
             <p class="efb-idea-why"><b>Why it might matter here:</b> {i["why"]}</p>
           </div>''')
 
-    # Deliberately not rendered. excludeFromConsider still keeps the benefit out of the
-    # suggestions above, and the query lives in the README for the consultant, but the
-    # client's own report is not the place to raise a question with the client.
-    query = ""
+    ex = narrative["examples"]
+    packages = []
+    for pk in ex["packages"]:
+        groups = "".join(
+            f'''<div class="efb-pk-group"><div class="efb-pk-gh">{g["h"]}</div>
+              <ul>{"".join(f"<li>{i}</li>" for i in g["items"])}</ul></div>''' for g in pk["groups"])
+        packages.append(f'''          <div class="efb-pk">
+            <div class="efb-pk-head"><span class="efb-pk-name">{pk["name"]}</span><span class="efb-pk-kind">{pk["kind"]}</span></div>
+            {groups}
+          </div>''')
+
+    wb = narrative["wellbeing"]
+    wb_items = "".join(
+        f'''<div class="efb-wb-item"><div class="efb-wb-h">{i["h"]}</div><p>{i["b"]}</p></div>'''
+        for i in wb["items"])
 
     nl = "\n"
-    return f'''      <!-- ── PAGE: Trends ─────────────────────────────────────── -->
+    return f'''      <!-- PAGE: Trends -->
       <section class="page" data-page="trends">
         <section class="bench-section" id="trends">
           <div class="sec-hd">
             <div class="sec-label-row"><span class="sec-num-badge">7</span><span class="sec-eyebrow">Looking Outward</span></div>
-            <h2 class="sec-title">Trends &amp; Other Benefits to Consider</h2>
+            <h2 class="sec-title">Trends &amp; Themes</h2>
           </div>
 
           <div class="efb-intro">
@@ -671,30 +826,45 @@ def gen_trends(benefits, trends):
             <h2>You might want to consider</h2>
             <p>{trends["intro"]}</p>
           </div>
-{query}
 
           <h3 class="efb-tr-sec">Benefits comparable funders offer and Esm&eacute;e does not</h3>
-          <p class="efb-tr-sec-sub">{len(consider)} benefits that appear in the foundation market and are not currently part of
-            Esm&eacute;e&rsquo;s package. Ordered by how straightforward they would be to introduce.</p>
+          <p class="efb-tr-sec-sub">{len(consider)} benefits that appear in the foundation market and are not currently
+            part of Esm&eacute;e&rsquo;s package. None of them is a gap.</p>
           <div class="efb-tr-stack">
 {nl.join(cards)}
           </div>
 
-          <h3 class="efb-tr-sec">Practice that is growing across the sector</h3>
-          <p class="efb-tr-sec-sub">Ideas drawn from what comparable funders and larger charities actually publish, rather
-            than from a trend list. Each one names the evidence behind it.</p>
+          <div class="efb-minor">
+            <div class="efb-minor-h">Smaller items worth checking you already have</div>
+            <p>These are typical practice but small enough that they are often provided without appearing on a
+              benefits list, so they may already be in place at Esm&eacute;e.</p>
+            <ul>{minor_rows}</ul>
+          </div>
+
+          <h3 class="efb-tr-sec">Benefits trends and themes</h3>
+          <p class="efb-tr-sec-sub">{th["intro"]}</p>
+          <div class="efb-aon">
+{aon}
+          </div>
+          <p class="efb-th-striking">{th["striking"]}</p>
+          <p class="efb-tr-sec-sub">{th["lead"]}</p>
+{themes}
+
+          <h3 class="efb-tr-sec">Other ideas we came across</h3>
+          <p class="efb-tr-sec-sub">{trends["ideasIntro"]}</p>
           <div class="efb-idea-stack">
 {nl.join(ideas)}
           </div>
 
-          <div class="callout">
-            <div class="callout-hd"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg><h4>How to use this page</h4></div>
-            <ul>
-              <li>Nothing on this page is a gap. Esm&eacute;e has no benefit below the lower quartile, so everything here is optional.</li>
-              <li><b>Quick win</b> means it can usually be introduced inside a year without a significant budget line. <b>Strategic</b> means it needs a decision about spend.</li>
-              <li>The <b>Action Plan</b> deals with the benefits Esm&eacute;e already provides and where they sit. This page is the opposite: what is not there at all.</li>
-            </ul>
+          <h3 class="efb-tr-sec">Two packages above typical market practice</h3>
+          <p class="efb-tr-sec-sub">{ex["intro"]}</p>
+          <div class="efb-pk-stack">
+{nl.join(packages)}
           </div>
+
+          <h3 class="efb-tr-sec">{wb["title"]}</h3>
+          <p class="efb-tr-sec-sub">{wb["intro"]}</p>
+          <div class="efb-wb">{wb_items}</div>
         </section>
       </section>
 
@@ -705,7 +875,9 @@ def gen_consider_appendix(benefits):
     """A condensed version for the Action Plan, which is the page people download."""
     rows = []
     for slug, b in benefits.items():
-        if b.get("esmee") or b.get("excludeFromConsider"):
+        # Minor items are listed on Trends but not carried into the downloadable plan; they
+        # are the sort of thing an organisation often already has without listing it.
+        if b.get("esmee") or b.get("excludeFromConsider") or b.get("minor"):
             continue
         quick = b.get("effort") == "quick"
         rows.append(f'''            <div class="efb-ap-row">
@@ -713,7 +885,7 @@ def gen_consider_appendix(benefits):
                 <span class="efb-tr-eff efb-tr-eff-{'quick' if quick else 'strategic'}">{'Quick win' if quick else 'Strategic'}</span>
               </div>
               <div class="efb-ap-market">Typical practice: {esc(b["m"])}</div>
-              <div class="efb-ap-why">{b["why"]}</div>
+              <div class="efb-ap-why">{b.get("why") or b["mDetail"]}</div>
             </div>''')
     nl = "\n"
     return f'''          <div class="efb-ap-consider">
@@ -808,7 +980,7 @@ def page_span(text, page):
 
 
 def main():
-    meta, benefits, trends = load()
+    meta, benefits, trends, narrative = load()
     t = TEMPLATE.read_text(encoding="utf-8")
     orig_len = len(t)
 
@@ -989,13 +1161,32 @@ def main():
                           '<div class="bx-dist-lbl" style="margin-bottom:8px" data-tour="plan-focus">Focus</div>', 1)
     t = t[:lo] + block + t[hi:]
 
+    # 11u. What we did, and our read of the position --------------------------
+    # The method note goes on the Overview, collapsed, so it is available without pushing
+    # the findings down the page. The position overview opens Your Benefits, which is where
+    # the consultant's read belongs: immediately before the benefit-by-benefit detail.
+    lo, hi = page_span(t, "overview")
+    block = t[lo:hi]
+    anchor_m = '<p class="efb-intro-note"'
+    assert anchor_m in block, "no anchor for the method note"
+    block = block.replace(anchor_m, gen_method(narrative["method"]) + "\n      " + anchor_m, 1)
+    t = t[:lo] + block + t[hi:]
+
+    lo, hi = page_span(t, "provision")
+    block = t[lo:hi]
+    anchor_p = '<div class="yb-overview">'
+    assert anchor_p in block, "no anchor for the position overview"
+    block = block.replace(anchor_p, gen_position_overview(narrative["positionOverview"])
+                          + "\n\n    " + anchor_p, 1)
+    t = t[:lo] + block + t[hi:]
+
     # 11v. New Trends page ----------------------------------------------------
     anchor = '      <!-- \u2500\u2500 PAGE: Action Plan'
     if anchor not in t:
         anchor = '      <section class="page" data-page="action-plan">'
     if anchor not in t:
         sys.exit("BUILD FAILED: no anchor for the Trends page")
-    t = t.replace(anchor, gen_trends(benefits, trends) + anchor, 1)
+    t = t.replace(anchor, gen_trends(benefits, trends, narrative) + anchor, 1)
 
     nav = '<button class="navlink" data-page="action-plan">'
     if nav not in t:
@@ -1083,6 +1274,23 @@ def main():
             lambda m: m.group(1) + html.escape(listed, quote=False) + m.group(2),
             block, count=1)
         t = t[:lo] + block + t[hi:]
+
+    # 10z. TwentySix branding only --------------------------------------------
+    # This is a TwentySix deliverable, so the Zigbert product brand comes out entirely: the
+    # header wordmark, the two print letterheads, and the tour's own identifiers. The
+    # identifiers are invisible to a reader, but they name the wrong product all the way
+    # through the source of a file we hand to a client.
+    t = t.replace('src="./shell/zigbert-logo.png" alt="Zigbert"',
+                  'src="./shell/twentysix-logo.png" alt="TwentySix"')
+    t = t.replace('aria-label="Zigbert"', 'aria-label="TwentySix"')
+    t = t.replace("data-zigbert-tour-start", "data-ts-tour-start")
+    t = t.replace("data-zigbert-tour-checklist", "data-ts-tour-checklist")
+    t = t.replace("ZigbertTour", "TwentySixTour")
+    t = t.replace("zigbert:tour", "ts26:tour")
+    t = t.replace("ztour-", "tstour-")
+    t = t.replace("Zigbert", "TwentySix").replace("zigbert", "twentysix")
+    if "zigbert" in t.lower():
+        sys.exit("BUILD FAILED: Zigbert branding still present")
 
     # 11. Retarget the shell assets -------------------------------------------
     # In demo2 the report lives at /benefits/ with the shell one level up. Here it is the

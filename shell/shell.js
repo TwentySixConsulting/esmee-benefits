@@ -1,4 +1,4 @@
-/* TwentySix · Zigbert — Unified Shell controller (static pages only)
+/* TwentySix — Unified Shell controller (static pages only)
  *
  * - Auth gate: redirects to "/" if no auth marker is present in localStorage.
  *   Honours both the temp-auth key (used until Supabase env vars are wired)
