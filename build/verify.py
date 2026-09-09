@@ -300,15 +300,28 @@ def browser_checks():
         for cls in (".efb-tr-card", ".efb-idea", ".efb-minor", ".efb-pk"):
             check(pg.eval_on_selector_all(cls, "e => e.length") == 0,
                   f"Trends no longer carries {cls}")
-        con = data["narrative"]["themes"]["consider"]
-        check(pg.eval_on_selector_all('.efb-cn-group', "e => e.length") == len(con),
-              f"Trends groups the initiatives into all {len(con)} themes")
-        want_rows = sum(len(g["items"]) for g in con)
-        check(pg.eval_on_selector_all('.efb-cn-row', "e => e.length") == want_rows,
-              f"Trends lists all {want_rows} initiatives with their reasoning")
-        have = sum(1 for g in con for i in g["items"] if i.get("have"))
+        # Initiatives now sit inside the theme they belong to, in the order the write-up
+        # uses, rather than in a separate section that repeated the same structure.
+        secs = data["narrative"]["themes"]["sections"]
+        want_rows = sum(len(x.get("items", [])) for x in secs)
+        pg.click('.efb-th-all'); pg.wait_for_timeout(500)
+        check(pg.eval_on_selector_all('[data-page="trends"] .efb-cn-row', "e => e.length") == want_rows,
+              f"all {want_rows} initiatives sit under their own theme")
+        check(pg.eval_on_selector_all('[data-page="trends"] > section > .efb-cn', "e => e.length") == 0,
+              "there is no separate consider section any more")
+        # The bullet list and the initiative rows were the same items said twice.
+        check(pg.eval_on_selector_all('.efb-th-body > ul', "e => e.length") == 0,
+              "no theme repeats its initiatives as a plain bullet list")
+        have = sum(1 for x in secs for i in x.get("items", []) if i.get("have"))
         check(pg.eval_on_selector_all('.efb-cn-have', "e => e.length") == have,
               f"the {have} initiatives Esmee already provides are marked, not suggested")
+        # A theme's badge and its own group header must not disagree.
+        pairs = pg.evaluate("""() => Array.from(document.querySelectorAll('[data-page="trends"] details.efb-th'))
+          .map(d => [ (d.querySelector('.efb-th-c')||{}).textContent || '',
+                      (d.querySelector('.efb-cn-count')||{}).textContent || '' ])""")
+        check(all(a.strip() == b.strip() for a, b in pairs),
+              "each theme's count matches the count on its own initiatives block")
+        pg.click('.efb-th-all'); pg.wait_for_timeout(400)
         check(pg.eval_on_selector_all('.efb-wb-item', "e => e.length") == len(data["narrative"]["wellbeing"]["items"]),
               "Trends carries the wellbeing strategy example")
 
@@ -417,10 +430,13 @@ def browser_checks():
               "themes are numbered in order, as the market sections are")
         check(pg.eval_on_selector_all('[data-page="trends"] .page-overview', "e => e.length") == 1,
               "Trends opens with an on-this-page box, like the category pages")
-        check(pg.eval_on_selector_all('.efb-toc li', "e => e.length") == 4,
-              "the on-this-page box lists the four parts")
-        check(pg.eval_on_selector_all('.efb-cn-count', "e => e.length") == len(con),
-              "each consider group shows how many items it holds")
+        # The invented contents list is gone: the box now carries the write-up's own opening
+        # paragraph, which is what the source document leads with.
+        check(pg.eval_on_selector_all('.efb-toc', "e => e.length") == 0,
+              "Trends opens with the write-up's own intro, not an invented contents list")
+        check(pg.eval_on_selector_all('.efb-cn-count', "e => e.length") ==
+              sum(1 for x in secs if x.get("items")),
+              "each theme with initiatives shows how many it holds")
         pg.click('.efb-th-all'); pg.wait_for_timeout(400)
         check(pg.eval_on_selector_all('details.efb-th[open]', "e => e.length") == n_th, "Expand all opens them")
         pg.click('.efb-th-all'); pg.wait_for_timeout(400)

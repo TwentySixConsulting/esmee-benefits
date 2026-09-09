@@ -225,9 +225,9 @@ STYLE_FIXES = """
 .efb-aon { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 4px 0 18px; }
 @media (max-width: 820px) { .efb-aon { grid-template-columns: 1fr; } }
 .efb-aon-col { background: var(--slate-soft); border: 1px solid rgba(107,122,153,0.22); border-radius: var(--radius); padding: 15px 18px; }
-.efb-aon-h { font-size: 12.5px; font-weight: 700; color: var(--slate-deep); margin-bottom: 8px; }
+.efb-aon-h { font-size: 12.5px; font-weight: 700; color: var(--slate-deep); margin-bottom: 9px; }
 .efb-aon-col ol { margin: 0; padding-left: 19px; }
-.efb-aon-col li { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 4px; }
+.efb-aon-col li { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.65; margin-bottom: 5px; }
 .efb-th-striking {
   font-size: 13.5px; color: var(--text); line-height: 1.7; margin: 0 0 18px;
   padding-left: 14px; border-left: 3px solid var(--gold);
@@ -287,6 +287,14 @@ STYLE_FIXES = """
 .efb-th[open] .efb-th-n { background: var(--gold); color: #fff; }
 .efb-cn-count {
   float: right; font-family: var(--font-sans); font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft);
+}
+.efb-th-body .efb-cn {
+  margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line);
+}
+.efb-th-after { margin-top: 14px !important; }
+.efb-th-c {
+  margin-left: 9px; font-family: var(--font-sans); font-size: 9.5px; font-weight: 700;
   letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft);
 }
 .efb-cn-group { margin-bottom: 20px; }
@@ -975,9 +983,10 @@ def gen_position_overview(po):
 
 def gen_trends(benefits, trends, narrative):
     """
-    Trends & Themes. Entirely the consultant's own write-up: Aon's summary of where the
-    market is moving, the six themes, then every initiative that write-up names with the
-    reasoning that accompanies it. The market-derived suggestions live on the Action Plan.
+    Trends & Themes, following the order of the write-up itself: the intro, Aon's two lists,
+    what is striking about them, then each theme in turn carrying both its narrative and its
+    own initiatives. Keeping the initiatives with the theme they belong to is what the source
+    document does, and it halves the page.
     """
     th = narrative["themes"]
 
@@ -987,45 +996,47 @@ def gen_trends(benefits, trends, narrative):
           </div>''' for c in th["aon"])
 
     def theme_block(sec, n):
-        """
-        Collapsible, the same way the market tables expand a row. The write-up is long prose;
-        closed it becomes a scannable list of six themes, open it is unchanged.
-        """
+        """Collapsible, so six themes read as six lines until one is opened."""
         out = []
         for para in sec.get("paras", []):
             out.append(f"<p>{para}</p>")
         if sec.get("list"):
             out.append("<ul>" + "".join(f"<li>{i}</li>" for i in sec["list"]) + "</ul>")
+
+        items = sec.get("items") or []
+        if items:
+            rows = []
+            for it in items:
+                have = it.get("have")
+                tag = ('<span class="efb-cn-have">Already in place</span>' if have
+                       else '<span class="efb-cn-tag">Consider</span>')
+                rows.append(f'''              <div class="efb-cn-row{' efb-cn-row--have' if have else ''}">
+                <div class="efb-cn-b">{it["b"]}{tag}</div>
+                <div class="efb-cn-r">{it["r"]}</div>
+              </div>''')
+            n_new = sum(1 for i in items if not i.get("have"))
+            nl2 = "\n"
+            out.append(f'''<div class="efb-cn">
+              <div class="efb-cn-gh">You might also consider<span class="efb-cn-count">{n_new} to consider</span></div>
+{nl2.join(rows)}
+            </div>''')
+
         for para in sec.get("after", []):
-            out.append(f"<p>{para}</p>")
+            out.append(f'''<p class="efb-th-after">{para}</p>''')
+
+        n_todo = sum(1 for i in items if not i.get("have"))
+        count = (f'<span class="efb-th-c">{n_todo} to consider</span>'
+                 if n_todo else '')
         return f'''        <details class="efb-th">
           <summary>
             <span class="efb-th-n">{n}</span>
             <span class="efb-th-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-            <span class="efb-th-txt"><span class="efb-th-h">{sec["h"]}</span><span class="efb-th-sum">{sec["summary"]}</span></span>
+            <span class="efb-th-txt"><span class="efb-th-h">{sec["h"]}{count}</span><span class="efb-th-sum">{sec["summary"]}</span></span>
           </summary>
           <div class="efb-th-body">{"".join(out)}</div>
         </details>'''
 
     themes = "\n".join(theme_block(sec, i) for i, sec in enumerate(th["sections"], 1))
-
-    groups = []
-    for g in th["consider"]:
-        rows = []
-        for it in g["items"]:
-            have = it.get("have")
-            tag = ('<span class="efb-cn-have">Already in place</span>' if have
-                   else '<span class="efb-cn-tag">Consider</span>')
-            rows.append(f'''            <div class="efb-cn-row{' efb-cn-row--have' if have else ''}">
-              <div class="efb-cn-b">{it["b"]}{tag}</div>
-              <div class="efb-cn-r">{it["r"]}</div>
-            </div>''')
-        nl2 = "\n"
-        n_new = sum(1 for i in g["items"] if not i.get("have"))
-        groups.append(f'''          <div class="efb-cn-group">
-            <div class="efb-cn-gh">{g["theme"]}<span class="efb-cn-count">{n_new} to consider</span></div>
-{nl2.join(rows)}
-          </div>''')
 
     wb = narrative["wellbeing"]
     wb_items = "".join(
@@ -1043,34 +1054,22 @@ def gen_trends(benefits, trends, narrative):
 
           <div class="page-overview">
             <div class="page-overview-eyebrow">On this page</div>
-            <h3 class="page-overview-title">Where the market is moving</h3>
+            <h3 class="page-overview-title">Benefits trends and themes</h3>
             <p>{th["intro"]}</p>
-            <ol class="efb-toc">
-              <li><b>The headline themes</b>, as every survey we reviewed agreed on them</li>
-              <li><b>Each theme in turn</b>, six collapsible sections</li>
-              <li><b>You might also consider</b>, every initiative named, with its reasoning</li>
-              <li><b>A well-being strategy</b>, an example of the joined-up approach</li>
-            </ol>
           </div>
 
-          <h3 class="efb-tr-sec" style="margin-top:26px">The headline themes</h3>
-          <p class="efb-tr-sec-sub">Summarised by Aon&rsquo;s research.</p>
           <div class="efb-aon efb-xp-out" data-export="market-emphasis|Where the market is moving">
 {aon}
           </div>
           <p class="efb-th-striking">{th["striking"]}</p>
+
           <div class="efb-th-hd">
-            <p class="efb-tr-sec-sub" style="margin:0">{th["lead"]}</p>
+            <p class="efb-tr-sec-sub" style="margin:0">{th["lead"]} Each one closes with the
+              initiatives we came across in that area, and the reasoning behind them.</p>
             <button type="button" class="efb-th-all no-print" data-all="open">Expand all</button>
           </div>
           <div class="efb-th-stack efb-xp-out" data-export="market-themes|Benefits trends and themes">
 {themes}
-          </div>
-
-          <h3 class="efb-tr-sec">You might also consider</h3>
-          <p class="efb-tr-sec-sub">{th["considerIntro"]}</p>
-          <div class="efb-cn efb-xp-out" data-export="also-consider|You might also consider">
-{nl.join(groups)}
           </div>
 
           <h3 class="efb-tr-sec">{wb["title"]}</h3>
