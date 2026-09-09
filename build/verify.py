@@ -274,30 +274,31 @@ def browser_checks():
         bens = data["benefits"]
         want = [b["label"] for b in bens.values()
                 if not b.get("esmee") and not b.get("excludeFromConsider") and not b.get("minor")]
-        titles = pg.eval_on_selector_all('.efb-tr-title', "e => e.map(x => x.textContent)")
-        check(sorted(titles) == sorted(want),
-              f"Trends suggests exactly the {len(want)} substantive benefits Esmee does not hold")
-        check(pg.eval_on_selector_all('.efb-idea', "e => e.length") == len(data["trends"]["ideas"]),
-              f"Trends lists all {len(data['trends']['ideas'])} sector ideas")
         # Esmee publishes a sabbatical, so suggesting one would tell the client to adopt
         # something they already offer. It is held as a query instead.
-        for slug, b in bens.items():
-            if b.get("excludeFromConsider"):
-                check(b["label"] not in titles,
-                      f'Trends does not suggest "{b["label"]}", which is an open query')
+        appendix_names = pg.eval_on_selector_all('.efb-ap-name', "e => e.map(x => x.textContent)")
         check(pg.eval_on_selector_all('.efb-tr-query', "e => e.length") == 0,
               "Trends does not air the open query to the client")
         check(pg.eval_on_selector_all('.efb-aon-col', "e => e.length") == 2,
               "Trends carries both Aon emphasis columns")
         check(pg.eval_on_selector_all('.efb-th', "e => e.length") == len(data["narrative"]["themes"]["sections"]),
               f"Trends carries all {len(data['narrative']['themes']['sections'])} theme sections")
-        check(pg.eval_on_selector_all('.efb-pk', "e => e.length") == 2,
-              "Trends carries both example packages")
+        # Trends is now the consultant's write-up only. The market-derived suggestions moved
+        # to the Action Plan, so none of those blocks should still be on this page.
+        for cls in (".efb-tr-card", ".efb-idea", ".efb-minor", ".efb-pk"):
+            check(pg.eval_on_selector_all(cls, "e => e.length") == 0,
+                  f"Trends no longer carries {cls}")
+        con = data["narrative"]["themes"]["consider"]
+        check(pg.eval_on_selector_all('.efb-cn-group', "e => e.length") == len(con),
+              f"Trends groups the initiatives into all {len(con)} themes")
+        want_rows = sum(len(g["items"]) for g in con)
+        check(pg.eval_on_selector_all('.efb-cn-row', "e => e.length") == want_rows,
+              f"Trends lists all {want_rows} initiatives with their reasoning")
+        have = sum(1 for g in con for i in g["items"] if i.get("have"))
+        check(pg.eval_on_selector_all('.efb-cn-have', "e => e.length") == have,
+              f"the {have} initiatives Esmee already provides are marked, not suggested")
         check(pg.eval_on_selector_all('.efb-wb-item', "e => e.length") == len(data["narrative"]["wellbeing"]["items"]),
               "Trends carries the wellbeing strategy example")
-        check(pg.eval_on_selector_all('.efb-minor li', "e => e.length") ==
-              len([b for b in bens.values() if b.get("minor")]),
-              "Trends lists the smaller items to check")
 
         # Our read of the position opens Your Benefits, and the method note is on Overview.
         pg.evaluate("location.hash = 'provision'"); pg.wait_for_timeout(400)
@@ -311,8 +312,20 @@ def browser_checks():
         surveys = pg.eval_on_selector('.efb-meth', "e => e.textContent")
         for survey in ("Alan Jones Associates", "CIPD Reward Management Survey",
                        "Reward & Employee Benefits Association", "ThanksBen", "Drewberry",
-                       "Great Places to Work", "careers pages"):
+                       "Great Places to Work", "careers pages",
+                       # Folded in from the separate sources block, which is gone.
+                       "Association of Charitable Foundations", "147 responding foundations",
+                       "Office for National Statistics", "employers that publish a figure"):
             check(survey in surveys, f'what-we-did names "{survey}"')
+        check(pg.eval_on_selector_all('.efb-sources', "e => e.length") == 0,
+              "the separate where-these-figures-come-from block is gone")
+
+        # Compare the market renders the sp field, so every market benefit needs one.
+        missing_sp = [s for s, x in bens.items()
+                      if not x.get("noMarket") and not (x.get("sp") or "").strip()]
+        check(not missing_sp, f"every market benefit has a wider-sector value ({len(bens)-1-len(missing_sp)})")
+        for s2 in missing_sp:
+            print(f"         MISSING sp: {s2}")
         check("trends" in pg.eval_on_selector_all('.navlink', "e => e.map(x => x.dataset.page)"),
               "Trends has a sidebar nav link")
         order = pg.eval_on_selector_all('.navlink', "e => e.map(x => x.dataset.page)")
